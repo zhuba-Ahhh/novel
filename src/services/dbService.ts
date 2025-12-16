@@ -82,3 +82,16 @@ export const deleteNovel = async (novelId: string): Promise<void> => {
     await wrapRequest(progressStore.delete(novelId));
   });
 };
+
+// 更新小说
+export const updateNovel = async (novel: Novel): Promise<Novel> => {
+  return executeTransaction(STORES.NOVELS, 'readwrite', async (transaction) => {
+    const store = transaction.objectStore(STORES.NOVELS);
+    const updatedNovel: Novel = {
+      ...novel,
+      updatedAt: new Date(),
+    };
+    await wrapRequest(store.put(updatedNovel));
+    return updatedNovel;
+  });
+};

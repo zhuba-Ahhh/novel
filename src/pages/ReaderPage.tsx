@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './ReaderPage.module.less';
 import { Chapter } from '../types';
 import { useReadingContext } from '../contexts/ReadingContext';
-import { Loading } from 'tdesign-mobile-react';
+import { BackTop, Loading } from 'tdesign-mobile-react';
 import ChapterList from '../components/ChapterList';
 import ChapterNavigation from '../components/ChapterNavigation';
+import ReaderHeader from '../components/ReaderHeader';
 import { getAllNovels } from '../services/dbService';
 import { getNovelChapters } from '../services/chapterService';
 import { getReadingProgress, saveReadingProgress } from '../services/progressService';
@@ -13,15 +14,15 @@ import { getReadingProgress, saveReadingProgress } from '../services/progressSer
 const ReaderPage: React.FC = () => {
   const { novelId } = useParams<{ novelId: string }>();
   const { settings } = useReadingContext();
+  const navigate = useNavigate();
 
   // 新增状态管理
   const [novelTitle, setNovelTitle] = useState<string>('');
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [currentChapterNumber, setCurrentChapterNumber] = useState(1);
-  const [initialScrollPosition, setInitialScrollPosition] = useState(0);
 
   const [showChapterList, setShowChapterList] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   // 加载小说数据
@@ -43,16 +44,13 @@ const ReaderPage: React.FC = () => {
                 .then(progress => {
                   if (progress) {
                     setCurrentChapterNumber(progress.chapterNumber);
-                    setInitialScrollPosition(progress.scrollPosition);
                   } else {
                     setCurrentChapterNumber(1);
-                    setInitialScrollPosition(0);
                   }
                 })
                 .catch(error => {
                   console.error('Failed to get reading progress:', error);
                   setCurrentChapterNumber(1);
-                  setInitialScrollPosition(0);
                 });
             })
             .catch(error => {
@@ -71,26 +69,24 @@ const ReaderPage: React.FC = () => {
 
   // 保存阅读进度
   const saveProgress = useCallback(() => {
-    if (!novelId || !currentChapter || !contentRef.current) return;
-
-    const scrollPosition = settings.readingMode === 'scroll'
-      ? contentRef.current.scrollTop
-      : 0;
+    if (!novelId || !currentChapter) return;
 
     saveReadingProgress({
       novelId,
       chapterId: currentChapter.id,
       chapterNumber: currentChapter.chapterNumber,
-      scrollPosition,
     }).catch(error => {
       console.error('Failed to save reading progress:', error);
     });
-  }, [currentChapter, novelId, settings.readingMode]);
+  }, [currentChapter, novelId]);
 
   // 滚动事件处理
   const handleScroll = () => {
     if (settings.readingMode === 'scroll') {
       saveProgress();
+      if (contentRef.current) {
+        setHasScrolled(contentRef.current.scrollTop > 0);
+      }
     }
   };
 
@@ -102,12 +98,7 @@ const ReaderPage: React.FC = () => {
     }
   }, [currentChapterNumber, saveProgress, settings.readingMode]);
 
-  // 初始加载时设置滚动位置
-  useEffect(() => {
-    if (contentRef.current && settings.readingMode === 'scroll') {
-      contentRef.current.scrollTop = initialScrollPosition;
-    }
-  }, [initialScrollPosition, settings.readingMode]);
+
 
   // 切换章节
   const changeChapter = (chapterNumber: number) => {
@@ -117,6 +108,15 @@ const ReaderPage: React.FC = () => {
     }
   };
 
+  // 动态标题
+  const dynamicTitle = useMemo(() => {
+    if (!hasScrolled) {
+      return novelTitle;
+    }
+    const chapterTitle = currentChapter ? `第 ${currentChapter.chapterNumber} 章 ${currentChapter.title}` : '';
+    return `${novelTitle} - ${chapterTitle}`;
+  }, [novelTitle, currentChapter, hasScrolled]);
+
   // 下一章
   const nextChapter = () => {
     changeChapter(currentChapterNumber + 1);
@@ -125,11 +125,6 @@ const ReaderPage: React.FC = () => {
   // 上一章
   const prevChapter = () => {
     changeChapter(currentChapterNumber - 1);
-  };
-
-  // 点击屏幕中央显示菜单
-  const handleContentClick = () => {
-    setIsMenuOpen(prev => !prev);
   };
 
   // 章节列表项点击处理
@@ -145,45 +140,28 @@ const ReaderPage: React.FC = () => {
 
   return (
     <div
+      ref={contentRef}
       className={`${styles['reader-container']} ${styles[settings.theme]}`}
       style={{
         backgroundColor: settings.backgroundColor,
         color: settings.textColor,
       }}
+      onScroll={handleScroll}
     >
       {/* 顶部导航 */}
-      <div className={styles['reader-header']} style={{ opacity: isMenuOpen ? 1 : 0 }}>
-        <div className={styles['header-left']}>
-          <button
-            className={styles['nav-button']}
-            onClick={() => window.history.back()}
-          >
-            ← 返回
-          </button>
-        </div>
-        <div className={styles['header-center']}>
-          <h1>{novelTitle}</h1>
-        </div>
-        <div className={styles['header-right']}>
-          <button
-            className={styles['nav-button']}
-            onClick={() => setShowChapterList(true)}
-          >
-            目录
-          </button>
-        </div>
-      </div>
+      <ReaderHeader
+        novelTitle={dynamicTitle}
+        onBack={() => navigate(-1)}
+        onShowChapterList={() => setShowChapterList(true)}
+      />
 
       {/* 阅读内容区域 */}
       <div
         className={styles['reader-content-wrapper']}
-        onClick={handleContentClick}
       >
         {/* 章节内容 */}
         <div
-          ref={contentRef}
           className={styles['chapter-content']}
-          onScroll={handleScroll}
           style={{
             fontSize: `${settings.fontSize}px`,
             fontFamily: settings.fontFamily,
@@ -221,6 +199,15 @@ const ReaderPage: React.FC = () => {
         isVisible={showChapterList}
         onClose={() => setShowChapterList(false)}
         onChapterClick={handleChapterItemClick}
+      />
+      <BackTop
+        text='返回顶部'
+        theme='half-round'
+        container={() => contentRef.current || document.body}
+        style={{
+          // @ts-ignore
+          '--td-spacer-2': '72px'
+        }}
       />
     </div>
   );

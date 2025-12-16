@@ -15,6 +15,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.10.1",
+    "tdesign-icons-react": "^0.6.1",
     "tdesign-mobile-react": "^0.21.0"
   },
   "devDependencies": {

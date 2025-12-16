@@ -21,6 +21,7 @@ const ChapterNavigation: React.FC<ChapterNavigationProps> = ({
     <div className={styles['chapter-navigation']}>
       <Button
         size="small"
+        theme="light"
         onClick={onPrevChapter}
         disabled={currentChapterNumber <= 1}
       >
@@ -31,6 +32,7 @@ const ChapterNavigation: React.FC<ChapterNavigationProps> = ({
       </span>
       <Button
         size="small"
+        theme="light"
         onClick={onNextChapter}
         disabled={currentChapterNumber >= totalChapters}
       >

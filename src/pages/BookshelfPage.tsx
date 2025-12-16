@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import FileUploader from '../components/FileUploader';
+import NovelCard from '../components/NovelCard';
 import { Novel, ParsedNovel } from '../types';
-import { saveNovel, getAllNovels } from '../services/dbService';
+import { saveNovel, getAllNovels, deleteNovel, updateNovel } from '../services/dbService';
 import { useNavigate } from 'react-router-dom';
 import styles from './BookshelfPage.module.less';
 
@@ -43,8 +44,28 @@ const BookshelfPage: React.FC = () => {
     navigate(`/reader/${novelId}`);
   };
 
+  // 删除小说
+  const handleDeleteNovel = async (novelId: string) => {
+    try {
+      await deleteNovel(novelId);
+      loadNovels(); // 更新小说列表
+    } catch (error) {
+      console.error('Failed to delete novel:', error);
+    }
+  };
+
+  // 更新小说
+  const handleUpdateNovel = async (updatedNovel: Novel) => {
+    try {
+      await updateNovel(updatedNovel);
+      loadNovels(); // 更新小说列表
+    } catch (error) {
+      console.error('Failed to update novel:', error);
+    }
+  };
+
   return (
-    <div className={styles['bookshelf']}>      
+    <div className={styles['bookshelf']}>
       {/* 文件上传组件 */}
       <div className={styles['upload-section']}>
         <FileUploader onNovelParsed={handleNovelParsed} />
@@ -58,20 +79,13 @@ const BookshelfPage: React.FC = () => {
         ) : (
             <div className={styles['novels-grid']}>
             {novels.map(novel => (
-              <div 
-                key={novel.id} 
-                className={styles['novel-card']}
-                onClick={() => openNovel(novel.id)}
-              >
-                <h3 className={styles['novel-title']}>{novel.title}</h3>
-                <p className={styles['novel-author']}>作者：{novel.author}</p>
-                <p className={styles['novel-chapters']}>共 {novel.totalChapters} 章</p>
-                <div className={styles['novel-meta']}>
-                  <span className={styles['novel-date']}>
-                    上传时间：{novel.updatedAt.toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
+              <NovelCard
+                key={novel.id}
+                novel={novel}
+                onOpen={openNovel}
+                onDelete={handleDeleteNovel}
+                onUpdate={handleUpdateNovel}
+              />
             ))}
           </div>
         )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../pages/ReaderPage.module.less';
+import { Drawer } from 'tdesign-mobile-react';
 import { Chapter } from '../types';
 
 interface ChapterListProps {
@@ -14,41 +14,27 @@ interface ChapterListProps {
 const ChapterList: React.FC<ChapterListProps> = ({
   novelTitle,
   chapters,
-  currentChapterNumber,
   isVisible,
   onClose,
   onChapterClick,
 }) => {
-  if (!isVisible) return null;
-
-  const handleChapterItemClick = (chapter: Chapter) => {
-    onChapterClick(chapter.chapterNumber);
-  };
 
   return (
-    <div className={styles['chapter-list']}>
-      <div className={styles['chapter-list-header']}>
-        <h3>{novelTitle} - 目录</h3>
-        <button
-          className={styles['close-button']}
-          onClick={onClose}
-        >
-          ×
-        </button>
-      </div>
-      <div className={styles['chapter-list-content']}>
-        {chapters.map(chapter => (
-          <div
-            key={chapter.id}
-            className={`${styles['chapter-item']} ${chapter.chapterNumber === currentChapterNumber ? styles['active'] : ''}`}
-            onClick={() => handleChapterItemClick(chapter)}
-          >
-            <span className={styles['chapter-number']}>{chapter.chapterNumber}</span>
-            <span className={styles['chapter-title']}>{chapter.title}</span>
-          </div>
-        ))}
-      </div>
-    </div>
+    <Drawer
+      visible={isVisible}
+      placement="right"
+      title={`${novelTitle} - 目录`}
+      onClose={onClose}
+      style={{ width: '100%', maxWidth: '300px' }}
+      items={chapters.map((chapter, index) => ({
+        title: `${index + 1}. ${chapter.title}`,
+      }))}
+      onItemClick={(index) => {
+        onChapterClick(chapters[index].chapterNumber);
+      }}
+      // @ts-ignore
+      style={{ '--td-drawer-sidebar-height': '100%' }}
+    />  
   );
 };
 

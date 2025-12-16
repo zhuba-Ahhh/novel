@@ -24,7 +24,6 @@ export interface ReadingProgress {
   novelId: string;
   chapterId: string;
   chapterNumber: number;
-  scrollPosition: number;
   lastReadAt: Date;
 }
 
