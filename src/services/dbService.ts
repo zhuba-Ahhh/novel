@@ -51,26 +51,36 @@ const openDB = (): Promise<IDBDatabase> => {
   });
 };
 
+// 将 IndexedDB 请求包装成 Promise
+const wrapRequest = <T>(request: IDBRequest<T>): Promise<T> => {
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = (e) => {
+      reject(new Error(`IndexedDB request failed`));
+      console.error(e);
+    };
+  });
+};
+
 // 执行事务操作
-const executeTransaction = <T>(
+const executeTransaction = async <T>(
   storeNames: string | string[],
   mode: IDBTransactionMode,
   callback: (transaction: IDBTransaction) => Promise<T>
 ): Promise<T> => {
-  return openDB().then((db) => {
-    const transaction = db.transaction(storeNames, mode);
-    
-    return callback(transaction).then((result) => {
-      transaction.oncomplete = () => {
-        db.close();
-      };
-      return result;
-    }).catch((error) => {
-      transaction.abort();
+  const db = await openDB();
+  const transaction_1 = db.transaction(storeNames, mode);
+  try {
+    const result_1 = await callback(transaction_1);
+    transaction_1.oncomplete = () => {
       db.close();
-      throw error;
-    });
-  });
+    };
+    return result_1;
+  } catch (error) {
+    transaction_1.abort();
+    db.close();
+    throw error;
+  }
 };
 
 // 生成唯一 ID
@@ -79,7 +89,7 @@ const generateId = (): string => {
 };
 
 // 保存小说和章节
-export const saveNovel = (parsedNovel: ParsedNovel): Promise<Novel> => {
+export const saveNovel = async (parsedNovel: ParsedNovel): Promise<Novel> => {
   return executeTransaction([STORES.NOVELS, STORES.CHAPTERS], 'readwrite', async (transaction) => {
     const novelStore = transaction.objectStore(STORES.NOVELS);
     const chapterStore = transaction.objectStore(STORES.CHAPTERS);
@@ -93,7 +103,7 @@ export const saveNovel = (parsedNovel: ParsedNovel): Promise<Novel> => {
     };
 
     // 保存小说
-    await novelStore.add(novel);
+    await wrapRequest(novelStore.add(novel));
 
     // 保存章节
     for (const chapterData of parsedNovel.chapters) {
@@ -102,7 +112,7 @@ export const saveNovel = (parsedNovel: ParsedNovel): Promise<Novel> => {
         id: generateId(),
         novelId: novel.id,
       };
-      await chapterStore.add(chapter);
+      await wrapRequest(chapterStore.add(chapter));
     }
 
     return novel;
@@ -114,11 +124,7 @@ export const getAllNovels = (): Promise<Novel[]> => {
   return executeTransaction(STORES.NOVELS, 'readonly', async (transaction) => {
     const store = transaction.objectStore(STORES.NOVELS);
     const request = store.getAll();
-
-    return new Promise((resolve, reject) => {
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(new Error('Failed to get novels'));
-    });
+    return await wrapRequest(request);
   });
 };
 
@@ -127,11 +133,7 @@ export const getNovelById = (novelId: string): Promise<Novel | undefined> => {
   return executeTransaction(STORES.NOVELS, 'readonly', async (transaction) => {
     const store = transaction.objectStore(STORES.NOVELS);
     const request = store.get(novelId);
-
-    return new Promise((resolve, reject) => {
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(new Error('Failed to get novel'));
-    });
+    return await wrapRequest(request);
   });
 };
 
@@ -143,7 +145,7 @@ export const deleteNovel = async (novelId: string): Promise<void> => {
     const progressStore = transaction.objectStore(STORES.READING_PROGRESS);
 
     // 删除小说
-    await novelStore.delete(novelId);
+    await wrapRequest(novelStore.delete(novelId));
 
     // 删除相关章节
     const chapterIndex = chapterStore.index('novelId');
@@ -163,7 +165,7 @@ export const deleteNovel = async (novelId: string): Promise<void> => {
     });
 
     // 删除阅读进度
-    await progressStore.delete(novelId);
+    await wrapRequest(progressStore.delete(novelId));
   });
 };
 

@@ -17,26 +17,30 @@ const chineseToArabic = (chinese: string): number => {
   
   let result = 0;
   let unit = 1;
-  let prev = 0;
+  let temp = 0;
   
   for (let i = chinese.length - 1; i >= 0; i--) {
     const char = chinese[i];
     
     if (digits[char as keyof typeof digits] !== undefined) {
       const digit = digits[char as keyof typeof digits];
-      result += digit * unit;
-      prev = digit;
+      temp += digit * unit;
+      unit *= 10;
     } else if (units[char as keyof typeof units] !== undefined) {
       const currentUnit = units[char as keyof typeof units];
-      if (prev === 0 && i === chinese.length - 1) {
-        unit = currentUnit;
+      if (temp === 0) {
+        temp = 1 * currentUnit;
       } else {
-        unit = currentUnit;
+        temp *= currentUnit;
       }
+      unit = 10;
+      result += temp;
+      temp = 0;
     }
   }
   
-  return result;
+  result += temp;
+  return result || 0;
 };
 
 // 解析章节标题
@@ -96,6 +100,7 @@ export const parseTxtNovel = (content: string, filename: string): ParsedNovel =>
   };
   let prefaceContent = '';
   let chapterNumberCounter = 0;
+  const usedChapterNumbers = new Set<number>();
   
   lines.forEach((line) => {
     const trimmedLine = line.trim();
@@ -108,16 +113,27 @@ export const parseTxtNovel = (content: string, filename: string): ParsedNovel =>
     
     if (chapterMatch) {
       // 如果已经有当前章节，保存它
-      if (currentChapter) {
+      if (currentChapter && !(currentChapter.chapterNumber === 0 && currentChapter.title === '' && currentChapter.content === '')) {
+        // 确保当前章节号唯一
+        while (usedChapterNumbers.has(currentChapter.chapterNumber)) {
+          currentChapter.chapterNumber = ++chapterNumberCounter;
+        }
+        usedChapterNumbers.add(currentChapter.chapterNumber);
+        
         chapters.push({
           ...currentChapter,
           wordCount: currentChapter.content.length,
         });
       }
       
-      // 创建新章节
+      // 创建新章节，确保章节号唯一
+      let newChapterNumber = chapterMatch.chapterNumber > 0 ? chapterMatch.chapterNumber : ++chapterNumberCounter;
+      while (usedChapterNumbers.has(newChapterNumber)) {
+        newChapterNumber = ++chapterNumberCounter;
+      }
+      
       currentChapter = {
-        chapterNumber: chapterMatch.chapterNumber || ++chapterNumberCounter,
+        chapterNumber: newChapterNumber,
         title: chapterMatch.title,
         content: '',
       };
@@ -131,10 +147,16 @@ export const parseTxtNovel = (content: string, filename: string): ParsedNovel =>
   });
   
   // 添加最后一个章节
-  if (currentChapter) {
+  if (currentChapter && !(currentChapter.chapterNumber === 0 && currentChapter.title === '' && currentChapter.content === '')) {
+    // 确保最后一个章节号唯一
+    while (usedChapterNumbers.has(currentChapter.chapterNumber)) {
+      currentChapter.chapterNumber = ++chapterNumberCounter;
+    }
+    usedChapterNumbers.add(currentChapter.chapterNumber);
+    
     chapters.push({
-      ...(currentChapter || {}),
-      wordCount: (currentChapter?.content || '').length,
+      ...currentChapter,
+      wordCount: currentChapter.content.length,
     });
   }
   
@@ -147,7 +169,7 @@ export const parseTxtNovel = (content: string, filename: string): ParsedNovel =>
       wordCount: content.length,
     });
   }
-  
+
   return {
     novel: {
       title: metadata.title,
