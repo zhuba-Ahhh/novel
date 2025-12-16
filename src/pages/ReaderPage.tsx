@@ -38,6 +38,7 @@ const ReaderPage: React.FC = () => {
           // 获取章节
           getNovelChapters(novelId)
             .then(chaptersData => {
+              console.log('chaptersData:', chaptersData);
               setChapters(chaptersData);
               // 获取阅读进度
               getReadingProgress(novelId)

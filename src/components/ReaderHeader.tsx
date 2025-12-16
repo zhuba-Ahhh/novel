@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Navbar } from 'tdesign-mobile-react';
-import styles from './ReaderHeader.module.less';
 
 interface ReaderHeaderProps {
   novelTitle: string;
@@ -19,7 +18,6 @@ const ReaderHeader: React.FC<ReaderHeaderProps> = ({
       leftArrow
       right={
         <Button
-          className={styles['nav-button']}
           onClick={onShowChapterList}
           variant="text"
         >

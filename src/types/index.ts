@@ -17,6 +17,7 @@ export interface Chapter {
   title: string;
   content: string;
   wordCount: number;
+  originalTitle: string;
 }
 
 // 阅读进度类型

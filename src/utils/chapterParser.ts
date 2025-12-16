@@ -1,5 +1,6 @@
 import { ParsedNovel, Chapter } from '../types';
 import { extractMetadataFromFilename } from './metadataParser';
+import {zhToNumber} from 'zh-to-number';
 
 // 常见章节标题正则表达式模式
 const CHAPTER_PATTERNS = [
@@ -12,40 +13,12 @@ const CHAPTER_PATTERNS = [
 ];
 
 // 中文数字转阿拉伯数字
-const chineseToArabic = (chinese: string): number => {
-  const digits = { '零': 0, '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9 };
-  const units = { '十': 10, '百': 100, '千': 1000, '万': 10000 };
-  
-  let result = 0;
-  let unit = 1;
-  let temp = 0;
-  
-  for (let i = chinese.length - 1; i >= 0; i--) {
-    const char = chinese[i];
-    
-    if (digits[char as keyof typeof digits] !== undefined) {
-      const digit = digits[char as keyof typeof digits];
-      temp += digit * unit;
-      unit *= 10;
-    } else if (units[char as keyof typeof units] !== undefined) {
-      const currentUnit = units[char as keyof typeof units];
-      if (temp === 0) {
-        temp = 1 * currentUnit;
-      } else {
-        temp *= currentUnit;
-      }
-      unit = 10;
-      result += temp;
-      temp = 0;
-    }
-  }
-  
-  result += temp;
-  return result || 0;
+export const chineseToArabic = (chinese: string): number => {  
+  return Number(zhToNumber(chinese)) || 0;
 };
 
 // 解析章节标题
-const parseChapterTitle = (line: string): { chapterNumber: number; title: string } | null => {
+export const parseChapterTitle = (line: string): { chapterNumber: number; title: string, originalTitle: string } | null => {
   for (const pattern of CHAPTER_PATTERNS) {
     const match = line.match(pattern);
     if (match) {
@@ -61,6 +34,7 @@ const parseChapterTitle = (line: string): { chapterNumber: number; title: string
       return {
         chapterNumber: number,
         title: chapterTitle?.trim() || `第${chapterNum}章`,
+        originalTitle: chapterNum + (chapterTitle?.trim() || ''),
       };
     }
   }
@@ -73,9 +47,10 @@ export const parseTxtNovel = (content: string, filename: string): ParsedNovel =>
   const metadata = extractMetadataFromFilename(filename);
   const chapters: Array<Omit<Chapter, 'id' | 'novelId'>> = [];
   
-  let currentChapter: { chapterNumber: number; title: string; content: string } = {
+  let currentChapter: { chapterNumber: number; title: string; originalTitle: string; content: string } = {
     chapterNumber: 0,
     title: '',
+    originalTitle: '',
     content: '',
   };
   let chapterNumberCounter = 0;
@@ -114,6 +89,7 @@ export const parseTxtNovel = (content: string, filename: string): ParsedNovel =>
       currentChapter = {
         chapterNumber: newChapterNumber,
         title: chapterMatch.title,
+        originalTitle: chapterMatch.originalTitle,
         content: '',
       };
     } else {
@@ -141,6 +117,7 @@ export const parseTxtNovel = (content: string, filename: string): ParsedNovel =>
     chapters.push({
       chapterNumber: 1,
       title: '全文',
+      originalTitle: '全文',
       content: content,
       wordCount: content.length,
     });
