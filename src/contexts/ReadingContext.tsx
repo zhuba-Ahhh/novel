@@ -4,7 +4,7 @@ import { ReadingSettings } from '../types';
 // 默认阅读设置
 const DEFAULT_SETTINGS: ReadingSettings = {
   fontSize: 18,
-  fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
+  fontFamily: 'LXGW WenKai, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
   lineSpacing: 1.6,
   backgroundColor: '#f5f5f5',
   textColor: '#333333',

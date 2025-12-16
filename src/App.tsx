@@ -1,14 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
+import styles from './App.module.less';
 import BookshelfPage from './pages/BookshelfPage';
 import ReaderPage from './pages/ReaderPage';
 import { ReadingProvider } from './contexts/ReadingContext';
 
-function App() {
+const App = () => {
   return (
     <ReadingProvider>
       <Router>
-        <div className="app-container">
+        <div className={styles['app-container']}>
           <Routes>
             <Route path="/" element={<BookshelfPage />} />
             <Route path="/reader/:novelId" element={<ReaderPage />} />
@@ -17,6 +17,6 @@ function App() {
       </Router>
     </ReadingProvider>
   );
-}
+};
 
 export default App

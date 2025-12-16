@@ -1,4 +1,5 @@
 import { ParsedNovel, Chapter } from '../types';
+import { extractMetadataFromFilename } from './metadataParser';
 
 // 常见章节标题正则表达式模式
 const CHAPTER_PATTERNS = [
@@ -66,56 +67,6 @@ const parseChapterTitle = (line: string): { chapterNumber: number; title: string
   return null;
 };
 
-// 从文件名提取小说标题和作者
-const extractMetadataFromFilename = (filename: string): { title: string; author: string } => {
-  // 移除文件扩展名
-  const nameWithoutExt = filename.replace(/\.txt$/i, '');
-  
-  // 尝试匹配 "《书名》作者：作者名" 格式
-  const authorFormatMatch = nameWithoutExt.match(/^《(.+?)》\s*作者[:：]\s*(.+)$/);
-  if (authorFormatMatch) {
-    return {
-      title: authorFormatMatch[1].trim(),
-      author: authorFormatMatch[2].trim(),
-    };
-  }
-  
-  // 尝试匹配 "《书名》- 作者名" 格式
-  const bookFormatMatch = nameWithoutExt.match(/^《(.+?)》\s*-\s*(.+)$/);
-  if (bookFormatMatch) {
-    return {
-      title: bookFormatMatch[1].trim(),
-      author: bookFormatMatch[2].trim(),
-    };
-  }
-  
-  // 尝试匹配 "书名 - 作者" 格式
-  const metadataMatch = nameWithoutExt.match(/^(.+?)\s*-\s*(.+)$/);
-  if (metadataMatch) {
-    // 如果标题包含书名号，提取内容
-    const titleMatch = metadataMatch[1].match(/^《(.+?)》$/);
-    return {
-      title: titleMatch ? titleMatch[1].trim() : metadataMatch[1].trim(),
-      author: metadataMatch[2].trim(),
-    };
-  }
-  
-  // 尝试匹配单独的书名号格式
-  const singleBookMatch = nameWithoutExt.match(/^《(.+?)》$/);
-  if (singleBookMatch) {
-    return {
-      title: singleBookMatch[1].trim(),
-      author: '未知作者',
-    };
-  }
-  
-  // 默认返回文件名作为标题
-  return {
-    title: nameWithoutExt.trim(),
-    author: '未知作者',
-  };
-};
-
 // 解析 TXT 小说内容
 export const parseTxtNovel = (content: string, filename: string): ParsedNovel => {
   const lines = content.split('\n');
@@ -127,7 +78,6 @@ export const parseTxtNovel = (content: string, filename: string): ParsedNovel =>
     title: '',
     content: '',
   };
-  let prefaceContent = '';
   let chapterNumberCounter = 0;
   const usedChapterNumbers = new Set<number>();
   
@@ -142,7 +92,7 @@ export const parseTxtNovel = (content: string, filename: string): ParsedNovel =>
     
     if (chapterMatch) {
       // 如果已经有当前章节，保存它
-      if (currentChapter && !(currentChapter.chapterNumber === 0 && currentChapter.title === '' && currentChapter.content === '')) {
+      if (!(currentChapter.chapterNumber === 0 && currentChapter.title === '' && currentChapter.content === '')) {
         // 确保当前章节号唯一
         while (usedChapterNumbers.has(currentChapter.chapterNumber)) {
           currentChapter.chapterNumber = ++chapterNumberCounter;
@@ -166,17 +116,14 @@ export const parseTxtNovel = (content: string, filename: string): ParsedNovel =>
         title: chapterMatch.title,
         content: '',
       };
-    } else if (currentChapter) {
+    } else {
       // 添加内容到当前章节
       currentChapter.content += line + '\n';
-    } else {
-      // 添加到前言
-      prefaceContent += line + '\n';
     }
   });
   
   // 添加最后一个章节
-  if (currentChapter && !(currentChapter.chapterNumber === 0 && currentChapter.title === '' && currentChapter.content === '')) {
+  if (!(currentChapter.chapterNumber === 0 && currentChapter.title === '' && currentChapter.content === '')) {
     // 确保最后一个章节号唯一
     while (usedChapterNumbers.has(currentChapter.chapterNumber)) {
       currentChapter.chapterNumber = ++chapterNumberCounter;
@@ -207,66 +154,4 @@ export const parseTxtNovel = (content: string, filename: string): ParsedNovel =>
     },
     chapters,
   };
-};
-
-// 读取文件内容
-export const readFileContent = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    
-    reader.onload = (event) => {
-      const content = event.target?.result as string;
-      resolve(content);
-    };
-    
-    reader.onerror = () => {
-      reject(new Error('文件读取失败'));
-    };
-    
-    reader.readAsText(file, 'utf-8');
-  });
-};
-
-// 分块读取大文件（用于进度显示）
-export const readFileInChunks = (
-  file: File,
-  onChunkRead: (chunk: string, progress: number) => void
-): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const chunkSize = 1024 * 1024; // 1MB 块
-    const totalChunks = Math.ceil(file.size / chunkSize);
-    let currentChunk = 0;
-    let content = '';
-    
-    const reader = new FileReader();
-    
-    const readNextChunk = () => {
-      const start = currentChunk * chunkSize;
-      const end = Math.min(start + chunkSize, file.size);
-      const slice = file.slice(start, end);
-      
-      reader.readAsText(slice, 'utf-8');
-    };
-    
-    reader.onload = (event) => {
-      const chunkContent = event.target?.result as string;
-      content += chunkContent;
-      currentChunk++;
-      
-      const progress = (currentChunk / totalChunks) * 100;
-      onChunkRead(chunkContent, progress);
-      
-      if (currentChunk < totalChunks) {
-        readNextChunk();
-      } else {
-        resolve(content);
-      }
-    };
-    
-    reader.onerror = () => {
-      reject(new Error('文件读取失败'));
-    };
-    
-    readNextChunk();
-  });
 };

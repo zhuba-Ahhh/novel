@@ -3,8 +3,12 @@ import { useParams } from 'react-router-dom';
 import styles from './ReaderPage.module.less';
 import { Chapter } from '../types';
 import { useReadingContext } from '../contexts/ReadingContext';
-import { saveReadingProgress, getAllNovels, getNovelChapters, getReadingProgress } from '../services/dbService';
 import { Loading } from 'tdesign-mobile-react';
+import ChapterList from '../components/ChapterList';
+import ChapterNavigation from '../components/ChapterNavigation';
+import { getAllNovels } from '../services/dbService';
+import { getNovelChapters } from '../services/chapterService';
+import { getReadingProgress, saveReadingProgress } from '../services/progressService';
 
 const ReaderPage: React.FC = () => {
   const { novelId } = useParams<{ novelId: string }>();
@@ -123,45 +127,14 @@ const ReaderPage: React.FC = () => {
     changeChapter(currentChapterNumber - 1);
   };
 
-  // 章节列表项点击处理
-  const handleChapterItemClick = (chapter: Chapter) => {
-    changeChapter(chapter.chapterNumber);
-  };
-
   // 点击屏幕中央显示菜单
   const handleContentClick = () => {
     setIsMenuOpen(prev => !prev);
   };
 
-  // 渲染章节列表
-  const renderChapterList = () => {
-    if (!showChapterList) return null;
-
-    return (
-      <div className={styles['chapter-list']}>
-        <div className={styles['chapter-list-header']}>
-          <h3>{novelTitle} - 目录</h3>
-          <button
-            className={styles['close-button']}
-            onClick={() => setShowChapterList(false)}
-          >
-            ×
-          </button>
-        </div>
-        <div className={styles['chapter-list-content']}>
-          {chapters.map(chapter => (
-            <div
-              key={chapter.id}
-              className={`${styles['chapter-item']} ${chapter.chapterNumber === currentChapterNumber ? styles['active'] : ''}`}
-              onClick={() => handleChapterItemClick(chapter)}
-            >
-              <span className={styles['chapter-number']}>{chapter.chapterNumber}</span>
-              <span className={styles['chapter-title']}>{chapter.title}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+  // 章节列表项点击处理
+  const handleChapterItemClick = (chapterNumber: number) => {
+    changeChapter(chapterNumber);
   };
 
   if (!novelId || !currentChapter || chapters.length === 0) {
@@ -231,29 +204,24 @@ const ReaderPage: React.FC = () => {
         </div>
 
         {/* 章节导航 */}
-        <div className={styles['chapter-navigation']}>
-          <button
-            className={`${styles['nav-button']} ${currentChapterNumber <= 1 ? styles['disabled'] : ''}`}
-            onClick={prevChapter}
-            disabled={currentChapterNumber <= 1}
-          >
-            上一章
-          </button>
-          <span className={styles['chapter-info']} onClick={() => setShowChapterList(true)}>
-            {currentChapterNumber} / {chapters.length}
-          </span>
-          <button
-            className={`${styles['nav-button']} ${currentChapterNumber >= chapters.length ? styles['disabled'] : ''}`}
-            onClick={nextChapter}
-            disabled={currentChapterNumber >= chapters.length}
-          >
-            下一章
-          </button>
-        </div>
+        <ChapterNavigation
+          currentChapterNumber={currentChapterNumber}
+          totalChapters={chapters.length}
+          onPrevChapter={prevChapter}
+          onNextChapter={nextChapter}
+          onChapterInfoClick={() => setShowChapterList(true)}
+        />
       </div>
 
       {/* 章节列表 */}
-      {renderChapterList()}
+      <ChapterList
+        novelTitle={novelTitle}
+        chapters={chapters}
+        currentChapterNumber={currentChapterNumber}
+        isVisible={showChapterList}
+        onClose={() => setShowChapterList(false)}
+        onChapterClick={handleChapterItemClick}
+      />
     </div>
   );
 };

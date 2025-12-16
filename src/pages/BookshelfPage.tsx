@@ -3,6 +3,7 @@ import FileUploader from '../components/FileUploader';
 import { Novel, ParsedNovel } from '../types';
 import { saveNovel, getAllNovels } from '../services/dbService';
 import { useNavigate } from 'react-router-dom';
+import styles from './BookshelfPage.module.less';
 
 const BookshelfPage: React.FC = () => {
   const [novels, setNovels] = useState<Novel[]>([]);
@@ -43,30 +44,30 @@ const BookshelfPage: React.FC = () => {
   };
 
   return (
-    <div className="bookshelf">      
+    <div className={styles['bookshelf']}>      
       {/* 文件上传组件 */}
-      <div className="upload-section">
+      <div className={styles['upload-section']}>
         <FileUploader onNovelParsed={handleNovelParsed} />
       </div>
 
       {/* 小说列表 */}
-      <div className="novels-list">
+      <div className={styles['novels-list']}>
         <h2>我的书架</h2>
         {novels.length === 0 ? (
-          <p className="no-novels">还没有小说，上传一本TXT小说开始阅读吧！</p>
+          <p className={styles['no-novels']}>还没有小说，上传一本TXT小说开始阅读吧！</p>
         ) : (
-          <div className="novels-grid">
+            <div className={styles['novels-grid']}>
             {novels.map(novel => (
               <div 
                 key={novel.id} 
-                className="novel-card"
+                className={styles['novel-card']}
                 onClick={() => openNovel(novel.id)}
               >
-                <h3 className="novel-title">{novel.title}</h3>
-                <p className="novel-author">作者：{novel.author}</p>
-                <p className="novel-chapters">共 {novel.totalChapters} 章</p>
-                <div className="novel-meta">
-                  <span className="novel-date">
+                <h3 className={styles['novel-title']}>{novel.title}</h3>
+                <p className={styles['novel-author']}>作者：{novel.author}</p>
+                <p className={styles['novel-chapters']}>共 {novel.totalChapters} 章</p>
+                <div className={styles['novel-meta']}>
+                  <span className={styles['novel-date']}>
                     上传时间：{novel.updatedAt.toLocaleDateString()}
                   </span>
                 </div>

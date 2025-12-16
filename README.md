@@ -13,7 +13,7 @@
 - **样式**: CSS Modules + Less
 - **浏览器存储**: IndexedDB
 - **文件解析**: Web API FileReader
-- **UI 组件**: tdesign-react
+- **UI 组件**: tdesign-mobile-react
 
 ## 3. 核心模块设计
 
