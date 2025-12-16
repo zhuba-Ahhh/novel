@@ -102,7 +102,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onNovelParsed }) => {
           onClick={handleUploadButtonClick}
           disabled={uploadStatus.isUploading}
         >
-          {uploadStatus.isUploading ? '上传中...' : '上传 TXT 小说'}
+          {uploadStatus.isUploading ? '上传中...' : '上传'}
         </button>
 
         {uploadStatus.isUploading && (

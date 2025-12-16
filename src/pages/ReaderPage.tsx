@@ -4,17 +4,18 @@ import styles from './ReaderPage.module.less';
 import { Chapter } from '../types';
 import { useReadingContext } from '../contexts/ReadingContext';
 import { saveReadingProgress, getAllNovels, getNovelChapters, getReadingProgress } from '../services/dbService';
+import { Loading } from 'tdesign-mobile-react';
 
 const ReaderPage: React.FC = () => {
   const { novelId } = useParams<{ novelId: string }>();
   const { settings } = useReadingContext();
-  
+
   // 新增状态管理
   const [novelTitle, setNovelTitle] = useState<string>('');
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [currentChapterNumber, setCurrentChapterNumber] = useState(1);
   const [initialScrollPosition, setInitialScrollPosition] = useState(0);
-  
+
   const [showChapterList, setShowChapterList] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -68,8 +69,8 @@ const ReaderPage: React.FC = () => {
   const saveProgress = useCallback(() => {
     if (!novelId || !currentChapter || !contentRef.current) return;
 
-    const scrollPosition = settings.readingMode === 'scroll' 
-      ? contentRef.current.scrollTop 
+    const scrollPosition = settings.readingMode === 'scroll'
+      ? contentRef.current.scrollTop
       : 0;
 
     saveReadingProgress({
@@ -140,8 +141,8 @@ const ReaderPage: React.FC = () => {
       <div className={styles['chapter-list']}>
         <div className={styles['chapter-list-header']}>
           <h3>{novelTitle} - 目录</h3>
-          <button 
-            className={styles['close-button']} 
+          <button
+            className={styles['close-button']}
             onClick={() => setShowChapterList(false)}
           >
             ×
@@ -164,12 +165,13 @@ const ReaderPage: React.FC = () => {
   };
 
   if (!novelId || !currentChapter || chapters.length === 0) {
-    console.log('novelId:', novelId, 'currentChapter:', currentChapter, 'chapters:', chapters);
-    return <div className={styles['reader-container']}>加载中...</div>;
+    return <div className={styles['loading-container']}>
+      <Loading theme="dots" size='40px' />
+    </div>
   }
 
   return (
-    <div 
+    <div
       className={`${styles['reader-container']} ${styles[settings.theme]}`}
       style={{
         backgroundColor: settings.backgroundColor,
@@ -179,7 +181,7 @@ const ReaderPage: React.FC = () => {
       {/* 顶部导航 */}
       <div className={styles['reader-header']} style={{ opacity: isMenuOpen ? 1 : 0 }}>
         <div className={styles['header-left']}>
-          <button 
+          <button
             className={styles['nav-button']}
             onClick={() => window.history.back()}
           >
@@ -190,7 +192,7 @@ const ReaderPage: React.FC = () => {
           <h1>{novelTitle}</h1>
         </div>
         <div className={styles['header-right']}>
-          <button 
+          <button
             className={styles['nav-button']}
             onClick={() => setShowChapterList(true)}
           >
@@ -200,15 +202,10 @@ const ReaderPage: React.FC = () => {
       </div>
 
       {/* 阅读内容区域 */}
-      <div 
+      <div
         className={styles['reader-content-wrapper']}
         onClick={handleContentClick}
       >
-        {/* 章节标题 */}
-        <div className={styles['chapter-header']}>
-          <h2 className={styles['chapter-title']}>{currentChapter.title}</h2>
-        </div>
-
         {/* 章节内容 */}
         <div
           ref={contentRef}
@@ -220,6 +217,12 @@ const ReaderPage: React.FC = () => {
             lineHeight: settings.lineSpacing,
           }}
         >
+          <div className={styles['chapter-header']}>
+            <h2 className={styles['chapter-title']}>第 {currentChapter.chapterNumber} 章 {currentChapter.title}</h2>
+            <div className={styles['chapter-meta']}>
+              <span>字数: {currentChapter.content?.length || 0} 字</span>
+            </div>
+          </div>
           {/* 将文本内容转换为段落 */}
           {currentChapter.content.split('\n').map((paragraph, index) => {
             if (!paragraph.trim()) return null;
@@ -236,7 +239,7 @@ const ReaderPage: React.FC = () => {
           >
             上一章
           </button>
-          <span className={styles['chapter-info']}>
+          <span className={styles['chapter-info']} onClick={() => setShowChapterList(true)}>
             {currentChapterNumber} / {chapters.length}
           </span>
           <button

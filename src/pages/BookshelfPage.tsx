@@ -43,9 +43,7 @@ const BookshelfPage: React.FC = () => {
   };
 
   return (
-    <div className="bookshelf">
-      <h1 className="app-title">小说阅读器</h1>
-      
+    <div className="bookshelf">      
       {/* 文件上传组件 */}
       <div className="upload-section">
         <FileUploader onNovelParsed={handleNovelParsed} />
