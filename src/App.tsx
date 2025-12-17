@@ -7,7 +7,7 @@ import { ReadingProvider } from './contexts/ReadingContext';
 const App = () => {
   return (
     <ReadingProvider>
-      <Router>
+      <Router basename={process.env.NODE_ENV === 'production' ? '/novel' : '/'}>
         <div className={styles['app-container']}>
           <Routes>
             <Route path="/" element={<BookshelfPage />} />
