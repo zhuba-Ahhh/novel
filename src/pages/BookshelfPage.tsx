@@ -5,6 +5,7 @@ import { Novel, ParsedNovel } from '../types';
 import { saveNovel, getAllNovels, deleteNovel, updateNovel } from '../services/dbService';
 import { useNavigate } from 'react-router-dom';
 import styles from './BookshelfPage.module.less';
+import { BottomBar } from '@/components/BottomBar';
 
 const BookshelfPage: React.FC = () => {
   const [novels, setNovels] = useState<Novel[]>([]);
@@ -90,6 +91,13 @@ const BookshelfPage: React.FC = () => {
           </div>
         )}
       </div>
+      <BottomBar
+        defaultSelected="shelf"
+        itemList={[
+          { value: 'shelf', label: '书架' },
+          { value: 'user', label: '我的' },
+        ]}
+      />
     </div>
   );
 };

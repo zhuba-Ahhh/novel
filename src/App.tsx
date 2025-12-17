@@ -5,13 +5,15 @@ import ReaderPage from './pages/ReaderPage';
 import { ReadingProvider } from './contexts/ReadingContext';
 
 const App = () => {
+
   return (
     <ReadingProvider>
       <Router basename={process.env.NODE_ENV === 'production' ? '/novel' : '/'}>
         <div className={styles['app-container']}>
           <Routes>
-            <Route path="/" element={<BookshelfPage />} />
+            <Route path="/shelf" element={<BookshelfPage />} />
             <Route path="/reader/:novelId" element={<ReaderPage />} />
+            <Route path="*" element={<BookshelfPage />} />
           </Routes>
         </div>
       </Router>

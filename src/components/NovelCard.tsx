@@ -103,6 +103,7 @@ const NovelCard: React.FC<NovelCardProps> = ({ novel, onOpen, onDelete, onUpdate
       </div>
 
       <Dialog
+        key={`edit-dialog-${novel.id}`}
         visible={isEditDialogOpen}
         onClose={() => setIsEditDialogOpen(false)}
         title="编辑小说信息"
@@ -124,6 +125,7 @@ const NovelCard: React.FC<NovelCardProps> = ({ novel, onOpen, onDelete, onUpdate
       </Dialog>
 
       <Dialog
+        key={`delete-dialog-${novel.id}`}
         visible={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
         title="删除确认"
