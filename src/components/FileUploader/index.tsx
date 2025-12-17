@@ -1,8 +1,8 @@
 import { useState, useRef, ChangeEvent } from 'react';
 import { Button, Progress, Toast } from 'tdesign-mobile-react';
-import styles from './FileUploader.module.less';
-import { UploadStatus, ParsedNovel } from '../types';
-import { parseTxtNovel, readFileContent } from '../utils';
+import styles from './index.module.less';
+import { UploadStatus, ParsedNovel } from '@/types';
+import { parseTxtNovel, readFileContent } from '@/utils';
 import { endsWith } from 'lodash-es';
 
 interface FileUploaderProps {
@@ -70,4 +70,4 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onNovelParsed }) => {
   );
 };
 
-export default FileUploader;
+export { FileUploader };

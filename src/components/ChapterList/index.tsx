@@ -1,6 +1,6 @@
 import React from 'react';
 import { Drawer } from 'tdesign-mobile-react';
-import { Chapter } from '../types';
+import { Chapter } from '@/types';
 
 interface ChapterListProps {
   novelTitle: string;
@@ -38,4 +38,4 @@ const ChapterList: React.FC<ChapterListProps> = ({
   );
 };
 
-export default ChapterList;
+export { ChapterList };

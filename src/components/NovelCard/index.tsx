@@ -3,7 +3,7 @@ import { Button, Dialog, Input, Loading } from 'tdesign-mobile-react';
 import { Novel, ReadingProgress, Chapter } from '@/types';
 import { getReadingProgress } from '@/services/progressService';
 import { getChapter } from '@/services/chapterService';
-import styles from './NovelCard.module.less';
+import styles from './index.module.less';
 
 interface NovelCardProps {
   novel: Novel;
@@ -140,4 +140,4 @@ const NovelCard: React.FC<NovelCardProps> = ({ novel, onOpen, onDelete, onUpdate
   );
 };
 
-export default NovelCard;
+export { NovelCard };

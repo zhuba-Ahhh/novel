@@ -1,6 +1,6 @@
 import React from 'react';
-import styles from '../pages/ReaderPage.module.less';
-import { Chapter, ReadingSettings } from '../types';
+import styles from './index.module.less';
+import { Chapter, ReadingSettings } from '@/types';
 
 interface ChapterContentProps {
   currentChapter: Chapter;
@@ -34,4 +34,4 @@ const ChapterContent: React.FC<ChapterContentProps> = ({ currentChapter, setting
   );
 };
 
-export default ChapterContent;
+export { ChapterContent };

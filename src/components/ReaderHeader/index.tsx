@@ -32,4 +32,4 @@ const ReaderHeader: React.FC<ReaderHeaderProps> = ({
   );
 };
 
-export default ReaderHeader;
+export { ReaderHeader };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'tdesign-mobile-react';
-import styles from './ChapterNavigation.module.less';
+import styles from './index.module.less';
 
 interface ChapterNavigationProps {
   currentChapterNumber: number;
@@ -42,4 +42,4 @@ const ChapterNavigation: React.FC<ChapterNavigationProps> = ({
   );
 };
 
-export default ChapterNavigation;
+export { ChapterNavigation };

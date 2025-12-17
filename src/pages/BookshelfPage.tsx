@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import FileUploader from '../components/FileUploader';
-import NovelCard from '../components/NovelCard';
-import { Novel, ParsedNovel } from '../types';
-import { saveNovel, getAllNovels, deleteNovel, updateNovel } from '../services/dbService';
+
+import { Novel, ParsedNovel } from '@/types';
+import { saveNovel, getAllNovels, deleteNovel, updateNovel } from '@/services';
 import { useNavigate } from 'react-router-dom';
 import styles from './BookshelfPage.module.less';
-import { BottomBar } from '@/components/BottomBar';
+import { BottomBar, FileUploader, NovelCard } from '@/components';
 
 const BookshelfPage: React.FC = () => {
   const [novels, setNovels] = useState<Novel[]>([]);
