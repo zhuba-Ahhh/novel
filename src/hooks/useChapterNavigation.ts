@@ -11,7 +11,7 @@ export const useChapterNavigation = (
     if (chapterNumber >= 1 && chapterNumber <= totalChapters) {
       onChapterChange(chapterNumber);
     }
-  }, [currentChapterNumber, totalChapters, onChapterChange]);
+  }, [totalChapters, onChapterChange]);
 
   // 下一章
   const nextChapter = useCallback(() => {
