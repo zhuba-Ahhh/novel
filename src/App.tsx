@@ -3,12 +3,19 @@ import styles from './App.module.less';
 import BookshelfPage from './pages/BookshelfPage';
 import ReaderPage from './pages/ReaderPage';
 import { ReadingProvider } from './contexts/ReadingContext';
+import { useMemo } from 'react';
 
 const App = () => {
+  const isProd = process.env.NODE_ENV === 'production';
+
+  const basename = useMemo(() => {
+    const isGithubPages = window.location.hostname.includes("github.io");
+    return isProd && !isGithubPages ? '/novel' : '/';
+  }, [isProd])
 
   return (
     <ReadingProvider>
-      <Router basename={process.env.NODE_ENV === 'production' ? '/novel' : '/'}>
+      <Router basename={basename}>
         <div className={styles['app-container']}>
           <Routes>
             <Route path="/shelf" element={<BookshelfPage />} />
