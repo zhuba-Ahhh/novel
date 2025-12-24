@@ -19,16 +19,16 @@ const ChapterContent: React.FC<ChapterContentProps> = ({ currentChapter, setting
         lineHeight: `${settings.lineSpacing}px`,
       }}
     >
-      <div className={styles['chapter-header']}>
-        <h2 className={styles['chapter-title']}>第 {currentChapter.chapterNumber} 章 {currentChapter.title}</h2>
-        <div className={styles['chapter-meta']}>
+      <div className={styles['chapter-content__header']}>
+        <h2 className={styles['chapter-content__title']}>第 {currentChapter.chapterNumber} 章 {currentChapter.title}</h2>
+        <div className={styles['chapter-content__meta']}>
           <span>字数: {currentChapter.content?.length || 0} 字</span>
         </div>
       </div>
       {/* 将文本内容转换为段落 */}
       {currentChapter.content.split('\n').map((paragraph, index) => {
         if (!paragraph.trim()) return null;
-        return <p key={index} className={styles['content-paragraph']}>{paragraph}</p>;
+        return <p key={index} className={styles['chapter-content__paragraph']}>{paragraph}</p>;
       })}
     </div>
   );

@@ -17,7 +17,7 @@ const BookshelfHeader: React.FC<BookshelfHeaderProps> = ({ layout, onLayoutChang
           variant="text"
           onClick={() => onLayoutChange('list')}
           className={layout === 'list' ? styles['active'] : ''}
-          icon={<img src={listIcon} alt="列表图标" className={styles['icon']} />}
+          icon={<img src={listIcon} className={styles['icon']} />}
         >
           列表
         </Button>
@@ -25,7 +25,7 @@ const BookshelfHeader: React.FC<BookshelfHeaderProps> = ({ layout, onLayoutChang
           variant="text"
           onClick={() => onLayoutChange('grid')}
           className={layout === 'grid' ? styles['active'] : ''}
-          icon={<img src={gridIcon} alt="卡片图标" className={styles['icon']} />}
+          icon={<img src={gridIcon} className={styles['icon']} />}
         >
           卡片
         </Button>

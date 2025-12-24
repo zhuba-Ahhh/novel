@@ -27,7 +27,7 @@ const ChapterNavigation: React.FC<ChapterNavigationProps> = ({
       >
         上一章
       </Button>
-      <span className={styles['chapter-info']} onClick={onChapterInfoClick}>
+      <span className={styles['chapter-navigation__info']} onClick={onChapterInfoClick}>
         {currentChapterNumber} / {totalChapters}
       </span>
       <Button

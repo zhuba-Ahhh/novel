@@ -30,23 +30,23 @@ const ReaderSetting = ({ isScrolling, showSettingsPanel, setShowSettingsPanel }:
         preventScrollThrough={false}
       >
         <div className={styles['settings-container']}>
-          <div className={styles['settings-header']}>
+          <div className={styles['settings-container__header']}>
             <h3>阅读设置</h3>
             <button
-              className={styles['close-button']}
+              className={styles['settings-container__header__close-button']}
               onClick={() => setShowSettingsPanel(false)}
             >
               ×
             </button>
           </div>
 
-          <div className={styles['settings-content']}>
+          <div className={styles['settings-container__content']}>
             <div className={styles['setting-section']}>
               {/* 字体大小设置 */}
-              <div className={styles['setting-section-item']}>
+              <div className={styles['setting-section__item']}>
                 <div>
                 <h4>字体大小</h4>
-                <div className={styles['font-size-controls']}>
+                <div className={styles['setting-section__font-size-controls']}>
                   <button
                     className={styles['control-button']}
                     onClick={decreaseFontSize}
@@ -54,7 +54,7 @@ const ReaderSetting = ({ isScrolling, showSettingsPanel, setShowSettingsPanel }:
                   >
                     A-
                   </button>
-                  <span className={styles['font-size-display']}>{settings.fontSize}px</span>
+                  <span className={styles['setting-section__font-size-controls__font-size-display']}>{settings.fontSize}px</span>
                   <button
                     className={styles['control-button']}
                     onClick={increaseFontSize}
@@ -67,7 +67,7 @@ const ReaderSetting = ({ isScrolling, showSettingsPanel, setShowSettingsPanel }:
 
               <div>
                 <h4>行高</h4>
-                <div className={styles['line-spacing-controls']}>
+                <div className={styles['setting-section__line-spacing-controls']}>
                   <button
                     className={styles['control-button']}
                     onClick={decreaseLineSpacing}
@@ -75,7 +75,7 @@ const ReaderSetting = ({ isScrolling, showSettingsPanel, setShowSettingsPanel }:
                   >
                     A-
                   </button>
-                  <span className={styles['line-spacing-display']}>{settings.lineSpacing}px</span>
+                  <span>{settings.lineSpacing}px</span>
                   <button
                     className={styles['control-button']}
                     onClick={increaseLineSpacing}
@@ -91,21 +91,21 @@ const ReaderSetting = ({ isScrolling, showSettingsPanel, setShowSettingsPanel }:
             {/* 主题设置 */}
             <div className={styles['setting-section']}>
               <h4>主题</h4>
-              <div className={styles['theme-controls']}>
+              <div className={styles['setting-section__theme-controls']}>
                 <button
-                  className={`${styles['theme-button']} ${settings.theme === 'light' ? styles['active'] : ''}`}
+                  className={`${styles['setting-section__theme-controls__theme-button']} ${settings.theme === 'light' ? styles['active'] : ''}`}
                   onClick={toggleTheme}
                 >
                   浅色
                 </button>
                 <button
-                  className={`${styles['theme-button']} ${settings.theme === 'dark' ? styles['active'] : ''}`}
+                  className={`${styles['setting-section__theme-controls__theme-button']} ${settings.theme === 'dark' ? styles['active'] : ''}`}
                   onClick={toggleTheme}
                 >
                   深色
                 </button>
                 <button
-                  className={`${styles['theme-button']} ${settings.theme === 'sepia' ? styles['active'] : ''}`}
+                  className={`${styles['setting-section__theme-controls__theme-button']} ${settings.theme === 'sepia' ? styles['active'] : ''}`}
                   onClick={toggleTheme}
                 >
                   护眼

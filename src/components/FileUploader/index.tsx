@@ -4,6 +4,7 @@ import styles from './index.module.less';
 import { UploadStatus, ParsedNovel } from '@/types';
 import { parseTxtNovel, readFileContent } from '@/utils';
 import { endsWith } from 'lodash-es';
+import addIcon from '@/assets/svg/add.svg';
 
 interface FileUploaderProps {
   onNovelParsed: (parsedNovel: ParsedNovel) => void;
@@ -48,13 +49,14 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onNovelParsed }) => {
 
   return (
     <div className={styles['file-uploader']}>
-      <input ref={fileInputRef} type="file" accept=".txt" onChange={handleFileSelect} className={styles['file-input']} disabled={uploadStatus.isUploading} />
-      <div className={styles['upload-container']}>
+      <input ref={fileInputRef} type="file" accept=".txt" onChange={handleFileSelect} className={styles['file-uploader__input']} disabled={uploadStatus.isUploading} />
+      <div className={styles['file-uploader__container']}>
         <Button
           size="large"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploadStatus.isUploading}
           style={{ padding: '12px 32px', fontSize: '16px' }}
+          icon={<img src={addIcon} className={styles['file-uploader__icon']} />}
         >
           {uploadStatus.isUploading ? '上传中...' : '上传'}
         </Button>
@@ -63,8 +65,8 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onNovelParsed }) => {
             <Progress percentage={Math.round(uploadStatus.progress)} size="large" />
           </div>
         )}
-        {uploadStatus.error && <div className={styles['error-message']}>{uploadStatus.error}</div>}
-        {uploadStatus.success && <div className={styles['success-message']}>小说上传成功！</div>}
+        {uploadStatus.error && <div className={styles['file-uploader__error-message']}>{uploadStatus.error}</div>}
+        {uploadStatus.success && <div className={styles['file-uploader__success-message']}>小说上传成功！</div>}
       </div>
     </div>
   );

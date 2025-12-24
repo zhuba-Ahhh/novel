@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  padding: 40px;
+  gap: 12px;
+  padding: 20px;
   border-radius: 12px;
   background-color: #f8f9fa;
   border: 2px dashed #dee2e6;
@@ -13,24 +13,43 @@
     background-color: #e9ecef;
     border-color: #adb5bd;
   }
-}
 
-.file-input {
-  display: none;
-}
+  &__input {
+    display: none;
+  }
 
-.upload-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-  max-width: 400px;
-}
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+  }
 
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .file-uploader {
+  &__icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  &__error-message {
+    color: #ff4d4f;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  &__success-message {
+    color: #52c41a;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
     padding: 20px;
     margin: 0 10px;
   }

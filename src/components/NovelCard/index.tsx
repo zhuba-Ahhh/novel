@@ -66,27 +66,27 @@ const NovelCard: React.FC<NovelCardProps> = ({ novel, onOpen, onDelete, onUpdate
 
   return (
     <div className={styles['novel-card-container']}>
-      <div className={styles['novel-card']} onClick={() => onOpen(novel.id)}>
+      <div className={styles['novel-card-container__card']} onClick={() => onOpen(novel.id)}>
         <Avatar image={coverUrl} shape="round" />
-        <div className={styles['novel-info']}>
-          <div className={styles['novel-title']}>
-            {novel.title} <span className={styles['novel-author']}>{novel.author}</span>
+        <div className={styles['novel-card-container__info']}>
+          <div className={styles['novel-card-container__title']}>
+            {novel.title} <span className={styles['novel-card-container__author']}>{novel.author}</span>
           </div>
-          <p className={styles['novel-chapters']}>共 {novel.totalChapters} 章</p>
+          <p className={styles['novel-card-container__chapters']}>共 {novel.totalChapters} 章</p>
           
           {/* 显示阅读进度 */}
-          <div className={styles['reading-progress']}>
+          <div className={styles['novel-card-container__reading-progress']}>
             {isLoading ? (
               <Loading theme="dots" size='20px' />
             ) : readingProgress ? (
-              <div className={styles['progress-info']}>
-                <div className={styles['progress-chapter']}>
-                  <span className={styles['chapter-number']}>{readingProgress.chapterNumber}.</span>
-                  <span className={styles['chapter-title']}>{currentChapter?.title || '未知'}</span>
+                <div className={styles['novel-card-container__progress-info']}>
+                  <div className={styles['novel-card-container__progress-chapter']}>
+                    <span className={styles['novel-card-container__chapter-number']}>{readingProgress.chapterNumber}.</span>
+                    <span className={styles['novel-card-container__chapter-title']}>{currentChapter?.title || '未知'}</span>
                 </div>
               </div>
             ) : (
-              <div className={styles['no-progress']}>
+                  <div className={styles['novel-card-container__no-progress']}>
                 未开始阅读
               </div>
             )}
@@ -95,7 +95,7 @@ const NovelCard: React.FC<NovelCardProps> = ({ novel, onOpen, onDelete, onUpdate
       </div>
 
       {/* 操作按钮 */}
-      <div className={styles['novel-actions']}>
+      <div className={styles['novel-card-container__actions']}>
         <Button size="small" variant="text" onClick={handleEditClick}>编辑</Button>
         <Button size="small" variant="text" theme="danger" onClick={handleDeleteClick}>删除</Button>
       </div>
