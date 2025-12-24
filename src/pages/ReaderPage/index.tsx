@@ -1,16 +1,19 @@
 import { useState, useRef, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import styles from './ReaderPage.module.less';
-import { useReadingContext } from '../contexts/ReadingContext';
+import styles from './index.module.less';
+import { useReadingContext } from '@/contexts/ReadingContext';
 import { BackTop, Loading } from 'tdesign-mobile-react';
 import { ChapterList, ChapterNavigation, ReaderHeader, ChapterContent } from '@/components';
-import { useNovelDataLoader } from '../hooks/useNovelDataLoader';
-import { useProgressManager } from '../hooks/useProgressManager';
-import { useChapterNavigation } from '../hooks/useChapterNavigation';
+import { useNovelDataLoader } from '@/hooks/useNovelDataLoader';
+import { useProgressManager } from '@/hooks/useProgressManager';
+import { useChapterNavigation } from '@/hooks/useChapterNavigation';
+import { ReaderSetting } from '@/components/ReaderSetting';
 
 const ReaderPage: React.FC = () => {
   const { novelId } = useParams<{ novelId: string }>();
   const { settings } = useReadingContext();
+
+  const [showSettingsPanel, setShowSettingsPanel] = useState(false);
   const navigate = useNavigate();
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -32,7 +35,7 @@ const ReaderPage: React.FC = () => {
   }, [chapters, currentChapterNumber]);
 
   // 使用自定义Hook管理阅读进度
-  const { handleScroll } = useProgressManager(
+  const { handleScroll, isScrolling } = useProgressManager(
     novelId || '',
     currentChapter,
     currentChapterNumber,
@@ -111,17 +114,27 @@ const ReaderPage: React.FC = () => {
         onClose={() => setShowChapterList(false)}
         onChapterClick={handleChapterItemClick}
       />
-      <BackTop
-        text='返回顶部'
-        theme='half-round'
-        container={() => contentRef.current || document.body}
-        style={{
-          // @ts-ignore
-          '--td-spacer-2': '72px'
-        }}
+      {
+        !showSettingsPanel &&
+        <BackTop
+          text='返回顶部'
+          theme='half-round'
+          container={() => contentRef.current || document.body}
+          style={{
+            // @ts-ignore
+            '--td-spacer-2': '72px'
+          }}
+        />
+      }
+
+      <ReaderSetting
+        isScrolling={isScrolling}
+        showSettingsPanel={showSettingsPanel}
+        setShowSettingsPanel={setShowSettingsPanel}
       />
+
     </div>
   );
 };
 
-export default ReaderPage;
+export { ReaderPage };

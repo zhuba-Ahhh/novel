@@ -7,3 +7,4 @@ export * from './FileUploader';
 export * from './ReaderHeader';
 export * from './BookshelfHeader/BookshelfHeader';
 export * from './BookshelfContent';
+export * from './ReaderSetting';

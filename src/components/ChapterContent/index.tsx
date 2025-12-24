@@ -16,7 +16,7 @@ const ChapterContent: React.FC<ChapterContentProps> = ({ currentChapter, setting
       style={{
         fontSize: `${settings.fontSize}px`,
         fontFamily: settings.fontFamily,
-        lineHeight: settings.lineSpacing,
+        lineHeight: `${settings.lineSpacing}px`,
       }}
     >
       <div className={styles['chapter-header']}>

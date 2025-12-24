@@ -20,7 +20,6 @@ const BottomBar = ({ defaultSelected = 'shelf', itemList }: BottomBarProps) => {
   useEffect(() => {
     const pathname = location.pathname;
     const value = pathname.split('/')[1];
-    console.log('value', value);
     if (value && itemList.some(item => item.value === value)) {
       setCurrentBar(value);
     }

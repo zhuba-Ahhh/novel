@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Novel, ParsedNovel } from '@/types';
 import { saveNovel, getAllNovels, deleteNovel, updateNovel } from '@/services';
 import { useNavigate } from 'react-router-dom';
-import styles from './BookshelfPage.module.less';
+import styles from './index.module.less';
 import { BottomBar, FileUploader, BookshelfHeader, BookshelfContent } from '@/components';
 
 const BookshelfPage: React.FC = () => {
@@ -95,4 +95,4 @@ const BookshelfPage: React.FC = () => {
   );
 };
 
-export default BookshelfPage;
+export { BookshelfPage };

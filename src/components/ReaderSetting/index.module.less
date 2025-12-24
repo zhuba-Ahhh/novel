@@ -1,0 +1,233 @@
+/* 设置按钮样式 */
+.settings-button {
+  position: fixed;
+  right: 20px;
+  bottom: 140px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .dark & {
+    background-color: rgba(255, 255, 255, 0.2);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  .sepia & {
+    background-color: rgba(91, 70, 54, 0.3);
+
+    &:hover {
+      background-color: rgba(91, 70, 54, 0.5);
+    }
+  }
+}
+
+/* 设置面板样式 */
+.settings-container {
+  background-color: inherit;
+  border-radius: 16px 16px 0 0;
+  padding: 20px;
+  z-index: 1100;
+  max-height: 80vh;
+  overflow-y: auto;
+
+  .dark & {
+    border-top-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .sepia & {
+    border-top-color: rgba(91, 70, 54, 0.2);
+    box-shadow: 0 -4px 16px rgba(91, 70, 54, 0.1);
+  }
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .dark & {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .sepia & {
+    border-bottom-color: rgba(91, 70, 54, 0.2);
+  }
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: inherit;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  padding: 0;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .dark &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .sepia &:hover {
+    background-color: rgba(91, 70, 54, 0.05);
+  }
+}
+
+.settings-content {
+  padding: 10px 0;
+}
+
+.setting-section {
+  margin-bottom: 24px;
+
+  &-item {
+    display: flex;
+    gap: 12px;
+  }
+
+  h4 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+/* 字体大小控制样式 */
+.font-size-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 行高大小控制样式 */
+.line-spacing-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.control-button {
+  background-color: rgba(0, 0, 0, 0.05);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .dark & {
+    background-color: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .sepia & {
+    background-color: rgba(91, 70, 54, 0.1);
+
+    &:hover {
+      background-color: rgba(91, 70, 54, 0.2);
+    }
+  }
+}
+
+.font-size-display {
+  font-size: 16px;
+  font-weight: 600;
+  min-width: 50px;
+  text-align: center;
+}
+
+/* 主题控制样式 */
+.theme-controls {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.theme-button {
+  background-color: rgba(0, 0, 0, 0.05);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &.active {
+    border-color: #165DFF;
+    background-color: rgba(22, 93, 255, 0.1);
+  }
+
+  .dark & {
+    background-color: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &.active {
+      border-color: #165DFF;
+      background-color: rgba(22, 93, 255, 0.2);
+    }
+  }
+
+  .sepia & {
+    background-color: rgba(91, 70, 54, 0.1);
+
+    &:hover {
+      background-color: rgba(91, 70, 54, 0.2);
+    }
+
+    &.active {
+      border-color: #8B4513;
+      background-color: rgba(139, 69, 19, 0.1);
+    }
+  }
+}

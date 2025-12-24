@@ -1,4 +1,5 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { debounce } from 'lodash-es';
 import { Chapter } from '../types';
 import { ReadingSettings } from '../types';
 import { saveReadingProgress } from '../services/progressService';
@@ -11,6 +12,16 @@ export const useProgressManager = (
   contentRef: React.RefObject<HTMLDivElement | null>,
   setHasScrolled: (value: boolean) => void
 ) => {
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  // 防抖处理滚动结束
+  const handleScrollEnd = useCallback(
+    debounce(() => {
+      setIsScrolling(false);
+    }, 300),
+    []
+  )
+
   // 保存阅读进度
   const saveProgress = useCallback(() => {
     if (!novelId || !currentChapter) return;
@@ -27,12 +38,28 @@ export const useProgressManager = (
   // 滚动事件处理
   const handleScroll = useCallback(() => {
     if (settings.readingMode === 'scroll') {
+      // 设置为正在滚动状态
+      setIsScrolling(true);
+
+      // 保存进度
       saveProgress();
+
+      // 更新滚动状态
       if (contentRef?.current) {
         setHasScrolled(contentRef.current.scrollTop > 0);
       }
+
+      // 触发防抖处理滚动结束
+      handleScrollEnd();
     }
-  }, [saveProgress, settings.readingMode, contentRef, setHasScrolled]);
+  }, [saveProgress, settings.readingMode, contentRef, setHasScrolled, handleScrollEnd]);
+
+  // 组件卸载时清理防抖
+  useEffect(() => {
+    return () => {
+      handleScrollEnd.cancel();
+    };
+  }, [handleScrollEnd]);
 
   // 章节变化时保存进度并重置滚动位置
   useEffect(() => {
@@ -44,6 +71,7 @@ export const useProgressManager = (
 
   return {
     handleScroll,
-    saveProgress
+    saveProgress,
+    isScrolling
   };
 };

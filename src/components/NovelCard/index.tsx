@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Dialog, Input, Loading } from 'tdesign-mobile-react';
+import { Avatar, Button, Dialog, Input, Loading } from 'tdesign-mobile-react';
 import { Novel, ReadingProgress, Chapter } from '@/types';
 import { getReadingProgress } from '@/services/progressService';
 import { getChapter } from '@/services/chapterService';
@@ -67,16 +67,11 @@ const NovelCard: React.FC<NovelCardProps> = ({ novel, onOpen, onDelete, onUpdate
   return (
     <div className={styles['novel-card-container']}>
       <div className={styles['novel-card']} onClick={() => onOpen(novel.id)}>
-        <div className={styles['novel-cover']}>
-          <img 
-            src={coverUrl} 
-            alt={novel.title} 
-            className={styles['cover-image']}
-          />
-        </div>
+        <Avatar image={coverUrl} shape="round" />
         <div className={styles['novel-info']}>
-          <div className={styles['novel-title']}>{novel.title}</div>
-          <p className={styles['novel-author']}>{novel.author}</p>
+          <div className={styles['novel-title']}>
+            {novel.title} <span className={styles['novel-author']}>{novel.author}</span>
+          </div>
           <p className={styles['novel-chapters']}>共 {novel.totalChapters} 章</p>
           
           {/* 显示阅读进度 */}

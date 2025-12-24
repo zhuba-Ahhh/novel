@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import styles from './App.module.less';
-import BookshelfPage from './pages/BookshelfPage';
-import ReaderPage from './pages/ReaderPage';
+import { BookshelfPage, ReaderPage } from './pages';
 import { ReadingProvider } from './contexts/ReadingContext';
 import { useMemo } from 'react';
 
