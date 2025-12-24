@@ -4,10 +4,11 @@ import { Novel, ParsedNovel } from '@/types';
 import { saveNovel, getAllNovels, deleteNovel, updateNovel } from '@/services';
 import { useNavigate } from 'react-router-dom';
 import styles from './BookshelfPage.module.less';
-import { BottomBar, FileUploader, NovelCard } from '@/components';
+import { BottomBar, FileUploader, BookshelfHeader, BookshelfContent } from '@/components';
 
 const BookshelfPage: React.FC = () => {
   const [novels, setNovels] = useState<Novel[]>([]);
+  const [layout, setLayout] = useState<'list' | 'grid'>('grid');
   const navigate = useNavigate();
 
   // 加载所有小说
@@ -71,25 +72,18 @@ const BookshelfPage: React.FC = () => {
         <FileUploader onNovelParsed={handleNovelParsed} />
       </div>
 
-      {/* 小说列表 */}
-      <div className={styles['novels-list']}>
-        <h2>我的书架</h2>
-        {novels.length === 0 ? (
-          <p className={styles['no-novels']}>还没有小说，上传一本TXT小说开始阅读吧！</p>
-        ) : (
-            <div className={styles['novels-grid']}>
-            {novels.map(novel => (
-              <NovelCard
-                key={novel.id}
-                novel={novel}
-                onOpen={openNovel}
-                onDelete={handleDeleteNovel}
-                onUpdate={handleUpdateNovel}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      {/* 书架头部 */}
+      <BookshelfHeader layout={layout} onLayoutChange={setLayout} />
+
+      {/* 小说内容区域 */}
+      <BookshelfContent
+        novels={novels}
+        layout={layout}
+        onOpenNovel={openNovel}
+        onDeleteNovel={handleDeleteNovel}
+        onUpdateNovel={handleUpdateNovel}
+      />
+
       <BottomBar
         defaultSelected="shelf"
         itemList={[

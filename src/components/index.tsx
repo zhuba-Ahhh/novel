@@ -5,3 +5,5 @@ export * from './ChapterList';
 export * from './ChapterNavigation';
 export * from './FileUploader';
 export * from './ReaderHeader';
+export * from './BookshelfHeader/BookshelfHeader';
+export * from './BookshelfContent';

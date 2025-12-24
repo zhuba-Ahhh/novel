@@ -1,0 +1,64 @@
+/* 书架内容区域 */
+.bookshelf-content {
+  display: grid;
+  gap: 1rem;
+  padding-bottom: 2rem;
+
+  /* 卡片布局 */
+  &.layout-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  /* 列表布局 */
+  &.layout-list {
+    grid-template-columns: 1fr;
+
+    .novel-item {
+      width: 100%;
+    }
+  }
+
+  /* 小说项 */
+  .novel-item {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+  }
+
+  /* 空状态 */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-text {
+      color: #7f8c8d;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .bookshelf-content {
+    gap: 0.8rem;
+
+    &.layout-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+  }
+}

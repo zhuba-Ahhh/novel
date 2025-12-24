@@ -17,7 +17,6 @@ const NovelCard: React.FC<NovelCardProps> = ({ novel, onOpen, onDelete, onUpdate
   const [editedTitle, setEditedTitle] = useState(novel.title);
   const [editedAuthor, setEditedAuthor] = useState(novel.author);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  // 添加状态用于存储阅读进度和当前章节信息
   const [readingProgress, setReadingProgress] = useState<ReadingProgress | undefined>(undefined);
   const [currentChapter, setCurrentChapter] = useState<Chapter | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,43 +62,47 @@ const NovelCard: React.FC<NovelCardProps> = ({ novel, onOpen, onDelete, onUpdate
     setIsEditDialogOpen(false);
   };
 
+  const coverUrl = "https://avatars.githubusercontent.com/u/84793349?v=4";
+
   return (
     <div className={styles['novel-card-container']}>
       <div className={styles['novel-card']} onClick={() => onOpen(novel.id)}>
-        <div className={styles['novel-title']}>{novel.title}</div>
-        <p className={styles['novel-author']}>作者：{novel.author}</p>
-        <p className={styles['novel-chapters']}>共 {novel.totalChapters} 章</p>
-        {/* 显示阅读进度和当前章节 */}
-        <div className={styles['reading-progress']}>
-          {isLoading ? (
-            <Loading theme="dots" size='40px' />
-          ) : readingProgress ? (
-            <>
+        <div className={styles['novel-cover']}>
+          <img 
+            src={coverUrl} 
+            alt={novel.title} 
+            className={styles['cover-image']}
+          />
+        </div>
+        <div className={styles['novel-info']}>
+          <div className={styles['novel-title']}>{novel.title}</div>
+          <p className={styles['novel-author']}>{novel.author}</p>
+          <p className={styles['novel-chapters']}>共 {novel.totalChapters} 章</p>
+          
+          {/* 显示阅读进度 */}
+          <div className={styles['reading-progress']}>
+            {isLoading ? (
+              <Loading theme="dots" size='20px' />
+            ) : readingProgress ? (
               <div className={styles['progress-info']}>
-                <div className={styles['progress-label']}>当前阅读</div>
                 <div className={styles['progress-chapter']}>
                   <span className={styles['chapter-number']}>{readingProgress.chapterNumber}.</span>
                   <span className={styles['chapter-title']}>{currentChapter?.title || '未知'}</span>
                 </div>
               </div>
-              <div className={styles['progress-last-read']}>
-                最后阅读：{new Date(readingProgress.lastReadAt).toLocaleString()}
+            ) : (
+              <div className={styles['no-progress']}>
+                未开始阅读
               </div>
-            </>
-          ) : (
-            <div className={styles['no-progress']}>
-              <span className={styles['no-progress-icon']}>📖</span>
-              <span className={styles['no-progress-text']}>还未开始阅读</span>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-        <div className={styles['novel-meta']}>
-          <span className={styles['novel-date']}>上传时间：{novel.updatedAt.toLocaleDateString()}</span>
-        </div>
-        <div className={styles['novel-actions']}>
-          <Button size="small" variant="outline" onClick={handleEditClick}>编辑</Button>
-          <Button size="small" variant="outline" theme="danger" onClick={handleDeleteClick}>删除</Button>
-        </div>
+      </div>
+
+      {/* 操作按钮 */}
+      <div className={styles['novel-actions']}>
+        <Button size="small" variant="text" onClick={handleEditClick}>编辑</Button>
+        <Button size="small" variant="text" theme="danger" onClick={handleDeleteClick}>删除</Button>
       </div>
 
       <Dialog
