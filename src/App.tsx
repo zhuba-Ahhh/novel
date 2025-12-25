@@ -9,7 +9,7 @@ const App = () => {
 
   const basename = useMemo(() => {
     const isGithubPages = window.location.hostname.includes("github.io");
-    return isProd && !isGithubPages ? '/novel' : '/';
+    return isProd && isGithubPages ? '/novel' : '/';
   }, [isProd])
 
   return (
