@@ -2,6 +2,7 @@ import { Popup } from "tdesign-mobile-react";
 import styles from './index.module.less';
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { MAX_FONT_SIZE, MAX_LINE_SPACING, MIN_FONT_SIZE, MIN_LINE_SPACING } from "@/const";
+import { THEME_CONFIGS } from "@/const/theme";
 
 interface SettingButtonProps {
   isScrolling: boolean;
@@ -92,24 +93,20 @@ const ReaderSetting = ({ isScrolling, showSettingsPanel, setShowSettingsPanel }:
             <div className={styles['setting-section']}>
               <h4>主题</h4>
               <div className={styles['setting-section__theme-controls']}>
-                <button
-                  className={`${styles['setting-section__theme-controls__theme-button']} ${settings.theme === 'light' ? styles['active'] : ''}`}
-                  onClick={toggleTheme}
-                >
-                  浅色
-                </button>
-                <button
-                  className={`${styles['setting-section__theme-controls__theme-button']} ${settings.theme === 'dark' ? styles['active'] : ''}`}
-                  onClick={toggleTheme}
-                >
-                  深色
-                </button>
-                <button
-                  className={`${styles['setting-section__theme-controls__theme-button']} ${settings.theme === 'sepia' ? styles['active'] : ''}`}
-                  onClick={toggleTheme}
-                >
-                  护眼
-                </button>
+                {THEME_CONFIGS.map((theme) => (
+                  <button
+                    key={theme.key}
+                    className={`${styles['setting-section__theme-controls__theme-button']} ${settings.theme === theme.key ? styles['active'] : ''}`}
+                    onClick={() => toggleTheme(theme.key)}
+                    style={{
+                      backgroundColor: theme.backgroundColor,
+                      color: theme.textColor,
+                      border: `1px solid ${theme.textColor}`,
+                    }}
+                  >
+                    {theme.name}
+                  </button>
+                ))}
               </div>
             </div>
           </div>

@@ -96,13 +96,15 @@ const ReaderPage: React.FC = () => {
         <ChapterContent currentChapter={currentChapter} settings={settings} />
 
         {/* 章节导航 */}
-        <ChapterNavigation
-          currentChapterNumber={currentChapterNumber}
-          totalChapters={chapters.length}
-          onPrevChapter={prevChapter}
-          onNextChapter={nextChapter}
-          onChapterInfoClick={() => setShowChapterList(true)}
-        />
+        {
+          !isScrolling && <ChapterNavigation
+            currentChapterNumber={currentChapterNumber}
+            totalChapters={chapters.length}
+            onPrevChapter={prevChapter}
+            onNextChapter={nextChapter}
+            onChapterInfoClick={() => setShowChapterList(true)}
+          />
+        }
       </div>
 
       {/* 章节列表 */}

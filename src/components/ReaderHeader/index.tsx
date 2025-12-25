@@ -1,3 +1,4 @@
+// import { useReadingContext } from '@/contexts/ReadingContext';
 import React from 'react';
 import { Button, Navbar } from 'tdesign-mobile-react';
 
@@ -12,6 +13,7 @@ const ReaderHeader: React.FC<ReaderHeaderProps> = ({
   onBack,
   onShowChapterList,
 }) => {
+  // const { settings } = useReadingContext();
 
   return (
     <Navbar
@@ -25,7 +27,14 @@ const ReaderHeader: React.FC<ReaderHeaderProps> = ({
         </Button>
       }
       onLeftClick={onBack}
-      style={{ zIndex: 10 }}
+      style={{
+        zIndex: 10,
+        // @ts-ignore
+        // '--td-navbar-color': settings.textColor,
+        // @ts-ignore
+        // '--td-navbar-bg-color': settings.backgroundColor,
+        // opacity: 0.9,
+      }}
     >
       {novelTitle}
     </Navbar>

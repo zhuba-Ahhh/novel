@@ -25,15 +25,14 @@ const ChapterList: React.FC<ChapterListProps> = ({
       placement="right"
       title={`${novelTitle} - 目录`}
       onClose={onClose}
-      style={{ width: '100%', maxWidth: '300px' }}
+      // @ts-ignore
+      style={{ width: '100%', maxWidth: '300px', '--td-drawer-sidebar-height': '100%' }}
       items={chapters.map((chapter, index) => ({
         title: `${index + 1}. ${chapter.title}`,
       }))}
-      onItemClick={(index) => {
-        onChapterClick(chapters[index].chapterNumber);
+      onItemClick={(index: string | number) => {
+        onChapterClick(chapters[Number(index)].chapterNumber);
       }}
-      // @ts-ignore
-      style={{ '--td-drawer-sidebar-height': '100%' }}
     />  
   );
 };

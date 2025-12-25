@@ -19,22 +19,6 @@
   &:hover {
     background-color: rgba(0, 0, 0, 0.5);
   }
-
-  .dark & {
-    background-color: rgba(255, 255, 255, 0.2);
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.3);
-    }
-  }
-
-  .sepia & {
-    background-color: rgba(91, 70, 54, 0.3);
-
-    &:hover {
-      background-color: rgba(91, 70, 54, 0.5);
-    }
-  }
 }
 
 /* 设置面板样式 */
@@ -46,21 +30,11 @@
   max-height: 80vh;
   overflow-y: auto;
 
-  .dark & {
-    border-top-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
-  }
-
-  .sepia & {
-    border-top-color: rgba(91, 70, 54, 0.2);
-    box-shadow: 0 -4px 16px rgba(91, 70, 54, 0.1);
-  }
-
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
@@ -68,14 +42,6 @@
       margin: 0;
       font-size: 18px;
       font-weight: 600;
-    }
-
-    .dark & {
-      border-bottom-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .sepia & {
-      border-bottom-color: rgba(91, 70, 54, 0.2);
     }
 
     &__close-button {
@@ -95,23 +61,16 @@
       &:hover {
         background-color: rgba(0, 0, 0, 0.05);
       }
-
-      .dark &:hover {
-        background-color: rgba(255, 255, 255, 0.05);
-      }
-
-      .sepia &:hover {
-        background-color: rgba(91, 70, 54, 0.05);
-      }
     }
   }
 
   &__content {
     padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
     .setting-section {
-      margin-bottom: 24px;
-
       &__item {
         display: flex;
         gap: 12px;
@@ -142,22 +101,6 @@
           &:hover {
             background-color: rgba(0, 0, 0, 0.1);
           }
-
-          .dark & {
-            background-color: rgba(255, 255, 255, 0.1);
-
-            &:hover {
-              background-color: rgba(255, 255, 255, 0.2);
-            }
-          }
-
-          .sepia & {
-            background-color: rgba(91, 70, 54, 0.1);
-
-            &:hover {
-              background-color: rgba(91, 70, 54, 0.2);
-            }
-          }
         }
 
         &__font-size-display {
@@ -187,22 +130,6 @@
           &:hover {
             background-color: rgba(0, 0, 0, 0.1);
           }
-
-          .dark & {
-            background-color: rgba(255, 255, 255, 0.1);
-
-            &:hover {
-              background-color: rgba(255, 255, 255, 0.2);
-            }
-          }
-
-          .sepia & {
-            background-color: rgba(91, 70, 54, 0.1);
-
-            &:hover {
-              background-color: rgba(91, 70, 54, 0.2);
-            }
-          }
         }
       }
 
@@ -212,48 +139,22 @@
         flex-wrap: wrap;
 
         &__theme-button {
-          background-color: rgba(0, 0, 0, 0.05);
           border: 2px solid transparent;
           border-radius: 8px;
           padding: 8px 16px;
           font-size: 14px;
-          color: inherit;
           cursor: pointer;
           transition: all 0.3s ease;
+          min-width: 60px;
 
           &:hover {
-            background-color: rgba(0, 0, 0, 0.1);
+            opacity: 0.9;
+            transform: translateY(-1px);
           }
 
           &.active {
             border-color: #165DFF;
-            background-color: rgba(22, 93, 255, 0.1);
-          }
-
-          .dark & {
-            background-color: rgba(255, 255, 255, 0.1);
-
-            &:hover {
-              background-color: rgba(255, 255, 255, 0.2);
-            }
-
-            &.active {
-              border-color: #165DFF;
-              background-color: rgba(22, 93, 255, 0.2);
-            }
-          }
-
-          .sepia & {
-            background-color: rgba(91, 70, 54, 0.1);
-
-            &:hover {
-              background-color: rgba(91, 70, 54, 0.2);
-            }
-
-            &.active {
-              border-color: #8B4513;
-              background-color: rgba(139, 69, 19, 0.1);
-            }
+            box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.2);
           }
         }
       }

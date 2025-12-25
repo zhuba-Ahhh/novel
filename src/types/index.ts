@@ -35,7 +35,7 @@ export interface ReadingSettings {
   lineSpacing: number;
   backgroundColor: string;
   textColor: string;
-  theme: 'light' | 'dark' | 'sepia';
+  theme: string;
   readingMode: 'scroll' | 'page';
 }
 

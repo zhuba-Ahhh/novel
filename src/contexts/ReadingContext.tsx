@@ -1,23 +1,14 @@
-import { createContext, useState, useContext, ReactNode, useMemo } from 'react';
+import { createContext, useState, useContext, ReactNode, useMemo, useCallback, useEffect } from 'react';
 import { ReadingSettings } from '../types';
-import { DEFAULT_FONT_SIZE, DEFAULT_LINE_SPACING, MAX_FONT_SIZE, MAX_LINE_SPACING, MIN_FONT_SIZE, MIN_LINE_SPACING, READING_SETTINGS_KEY } from '@/const';
+import { MAX_FONT_SIZE, MAX_LINE_SPACING, MIN_FONT_SIZE, MIN_LINE_SPACING, READING_SETTINGS_KEY } from '@/const';
+import { DEFAULT_SETTINGS, THEME_CONFIGS } from '@/const/theme';
 
-// 默认阅读设置
-const DEFAULT_SETTINGS: ReadingSettings = {
-  fontSize: DEFAULT_FONT_SIZE,
-  fontFamily: 'LXGW WenKai, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
-  lineSpacing: DEFAULT_LINE_SPACING,
-  backgroundColor: '#f5f5f5',
-  textColor: '#333333',
-  theme: 'light',
-  readingMode: 'scroll',
-};
 
 // 阅读上下文类型
 interface ReadingContextType {
   settings: ReadingSettings;
   updateSettings: (newSettings: Partial<ReadingSettings>) => void;
-  toggleTheme: () => void;
+  toggleTheme: (themeKey: string) => void;
   increaseFontSize: () => void;
   decreaseFontSize: () => void;
   increaseLineSpacing: () => void;
@@ -37,69 +28,52 @@ export const ReadingProvider: React.FC<ReadingProviderProps> = ({ children }) =>
   const initialSettings = savedSettings ? JSON.parse(savedSettings) : DEFAULT_SETTINGS;
   const [settings, setSettings] = useState<ReadingSettings>(initialSettings);
 
+  useEffect(() => {
+    localStorage.setItem(READING_SETTINGS_KEY, JSON.stringify(settings));
+  }, [settings]);
+
   // 更新设置
-  const updateSettings = (newSettings: Partial<ReadingSettings>) => {
-    setSettings(prev => {
-      const temp = ({ ...prev, ...newSettings })
-      localStorage.setItem(READING_SETTINGS_KEY, JSON.stringify(temp));
-      return temp;
-    });
-  };
+  const updateSettings = useCallback((newSettings: Partial<ReadingSettings>) => {
+    setSettings(prev => ({ ...prev, ...newSettings }));
+  }, []);
 
   // 切换主题
-  const toggleTheme = () => {
+  const toggleTheme = useCallback((themeKey: string) => {
+    const themeConfig = THEME_CONFIGS.find(config => config.key === themeKey);
+    if (themeConfig) {
+      updateSettings({
+        theme: themeKey,
+        backgroundColor: themeConfig.backgroundColor,
+        textColor: themeConfig.textColor,
+      });
+    }
+  }, [updateSettings]);
+
+  // 调整字体大小的通用函数
+  const adjustFontSize = useCallback((delta: number) => {
     setSettings(prev => {
-      const themes: Array<ReadingSettings['theme']> = ['light', 'dark', 'sepia'];
-      const currentIndex = themes.indexOf(prev.theme);
-      const nextIndex = (currentIndex + 1) % themes.length;
-      const newTheme = themes[nextIndex];
-      
-      // 根据主题更新颜色
-      let backgroundColor = prev.backgroundColor;
-      let textColor = prev.textColor;
-      
-      switch (newTheme) {
-        case 'dark':
-          backgroundColor = '#121212';
-          textColor = '#e0e0e0';
-          break;
-        case 'sepia':
-          backgroundColor = '#f4ecd8';
-          textColor = '#5b4636';
-          break;
-        case 'light':
-        default:
-          backgroundColor = '#f5f5f5';
-          textColor = '#333333';
-          break;
-      }
-
-      const temp = ({ ...prev, theme: newTheme, backgroundColor, textColor });
-      localStorage.setItem(READING_SETTINGS_KEY, JSON.stringify(temp));
-      return temp;
+      const newSize = Math.max(MIN_FONT_SIZE, Math.min(prev.fontSize + delta, MAX_FONT_SIZE));
+      return { ...prev, fontSize: newSize };
     });
-  };
+  }, []);
 
-  // 增大字体大小
-  const increaseFontSize = () => {
-    updateSettings({ fontSize: Math.min(settings.fontSize + 2, MAX_FONT_SIZE) });
-  };
+  // 调整行高的通用函数
+  const adjustLineSpacing = useCallback((delta: number) => {
+    setSettings(prev => {
+      const newSpacing = Math.max(MIN_LINE_SPACING, Math.min(prev.lineSpacing + delta, MAX_LINE_SPACING));
+      return { ...prev, lineSpacing: Number(newSpacing.toFixed(2)) };
+    });
+  }, []);
 
-  // 减小字体大小
-  const decreaseFontSize = () => {
-    updateSettings({ fontSize: Math.max(settings.fontSize - 2, MIN_FONT_SIZE) });
-  };
+  // 字体大小调整函数
+  const increaseFontSize = useCallback(() => adjustFontSize(2), [adjustFontSize]);
+  const decreaseFontSize = useCallback(() => adjustFontSize(-2), [adjustFontSize]);
 
-  // 行高
-  const increaseLineSpacing = () => {
-    updateSettings({ lineSpacing: Number(Math.min(settings.lineSpacing + 2, MAX_LINE_SPACING).toFixed(2)) });
-  };
+  // 行高调整函数
+  const increaseLineSpacing = useCallback(() => adjustLineSpacing(2), [adjustLineSpacing]);
+  const decreaseLineSpacing = useCallback(() => adjustLineSpacing(-2), [adjustLineSpacing]);
 
-  // 减小行高
-  const decreaseLineSpacing = () => {
-    updateSettings({ lineSpacing: Number(Math.max(settings.lineSpacing - 2, MIN_LINE_SPACING).toFixed(2)) });
-  };
-
+  // 提供给上下文的值
   const value = useMemo(() => ({
     settings,
     updateSettings,
@@ -108,7 +82,7 @@ export const ReadingProvider: React.FC<ReadingProviderProps> = ({ children }) =>
     decreaseFontSize,
     increaseLineSpacing,
     decreaseLineSpacing,
-  }), [settings]);
+  }), [settings, updateSettings, toggleTheme, increaseFontSize, decreaseFontSize, increaseLineSpacing, decreaseLineSpacing]);
 
   return (
     <ReadingContext.Provider value={value}>
@@ -118,10 +92,9 @@ export const ReadingProvider: React.FC<ReadingProviderProps> = ({ children }) =>
 };
 
 // 自定义 Hook 用于访问阅读上下文
-
 export const useReadingContext = () => {
   const context = useContext(ReadingContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useReadingContext must be used within a ReadingProvider');
   }
   return context;
