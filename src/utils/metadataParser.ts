@@ -21,6 +21,15 @@ export const extractMetadataFromFilename = (filename: string): { title: string; 
     };
   }
   
+  // 尝试匹配 "《书名》作者名" 格式（无分隔符）
+  const directAuthorMatch = nameWithoutExt.match(/^《(.+?)》\s*(.+)$/);
+  if (directAuthorMatch) {
+    return {
+      title: directAuthorMatch[1].trim(),
+      author: directAuthorMatch[2].trim(),
+    };
+  }
+  
   // 尝试匹配 "书名 - 作者" 格式
   const metadataMatch = nameWithoutExt.match(/^(.+?)\s*-\s*(.+)$/);
   if (metadataMatch) {

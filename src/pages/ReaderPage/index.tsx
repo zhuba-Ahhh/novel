@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useLayoutEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './index.module.less';
 import { useReadingContext } from '@/contexts/ReadingContext';
@@ -31,8 +31,15 @@ const ReaderPage: React.FC = () => {
 
   // 优化性能：使用useMemo获取当前章节
   const currentChapter = useMemo(() => {
-    return chapters.find(ch => ch.chapterNumber === currentChapterNumber) || chapters[0];
+    const chapter = chapters.find(ch => ch.chapterNumber === currentChapterNumber);
+    return chapter || chapters?.[0];
   }, [chapters, currentChapterNumber]);
+
+  useLayoutEffect(() => {
+    if (!currentChapter || chapters.length == 0) {
+      navigate(``);
+    }
+  }, [currentChapter, navigate, chapters]);
 
   // 使用自定义Hook管理阅读进度
   const { handleScroll, isScrolling } = useProgressManager(

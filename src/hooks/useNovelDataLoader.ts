@@ -3,12 +3,14 @@ import { Chapter } from '../types';
 import { getAllNovels } from '../services/dbService';
 import { getNovelChapters } from '../services/chapterService';
 import { getReadingProgress } from '../services/progressService';
+import { useNavigate } from 'react-router-dom';
 
 export const useNovelDataLoader = (novelId: string | undefined) => {
   const [novelTitle, setNovelTitle] = useState<string>('');
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [currentChapterNumber, setCurrentChapterNumber] = useState(1);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!novelId) {
@@ -27,6 +29,7 @@ export const useNovelDataLoader = (novelId: string | undefined) => {
           // 获取章节
           return getNovelChapters(novelId);
         }
+        navigate(`/shelf`);
         return Promise.resolve([]);
       })
       .then(chaptersData => {
