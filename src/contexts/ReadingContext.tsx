@@ -1,14 +1,14 @@
 import { createContext, useState, useContext, ReactNode, useMemo, useCallback, useEffect } from 'react';
 import { ReadingSettings } from '../types';
 import { MAX_FONT_SIZE, MAX_LINE_SPACING, MIN_FONT_SIZE, MIN_LINE_SPACING, READING_SETTINGS_KEY } from '@/const';
-import { DEFAULT_SETTINGS, THEME_CONFIGS } from '@/const/theme';
-
+import { DEFAULT_SETTINGS, THEME_CONFIGS, FONT_OPTIONS, FontKey } from '@/const/theme';
 
 // 阅读上下文类型
 interface ReadingContextType {
   settings: ReadingSettings;
   updateSettings: (newSettings: Partial<ReadingSettings>) => void;
   toggleTheme: (themeKey: string) => void;
+  toggleFont: (fontKey: FontKey) => void;
   increaseFontSize: () => void;
   decreaseFontSize: () => void;
   increaseLineSpacing: () => void;
@@ -49,6 +49,16 @@ export const ReadingProvider: React.FC<ReadingProviderProps> = ({ children }) =>
     }
   }, [updateSettings]);
 
+  // 切换字体
+  const toggleFont = useCallback((fontKey: FontKey) => {
+    const fontOption = FONT_OPTIONS.find(option => option.key === fontKey);
+    if (fontOption) {
+      updateSettings({
+        fontFamily: fontOption.fontFamily,
+      });
+    }
+  }, [updateSettings]);
+
   // 调整字体大小的通用函数
   const adjustFontSize = useCallback((delta: number) => {
     setSettings(prev => {
@@ -78,11 +88,12 @@ export const ReadingProvider: React.FC<ReadingProviderProps> = ({ children }) =>
     settings,
     updateSettings,
     toggleTheme,
+    toggleFont,
     increaseFontSize,
     decreaseFontSize,
     increaseLineSpacing,
     decreaseLineSpacing,
-  }), [settings, updateSettings, toggleTheme, increaseFontSize, decreaseFontSize, increaseLineSpacing, decreaseLineSpacing]);
+  }), [settings, updateSettings, toggleTheme, toggleFont, increaseFontSize, decreaseFontSize, increaseLineSpacing, decreaseLineSpacing]);
 
   return (
     <ReadingContext.Provider value={value}>
