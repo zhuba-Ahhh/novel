@@ -1,6 +1,16 @@
-import { Novel, Chapter, ParsedNovel } from '../types';
-import { STORES, generateId } from './dbConfig';
-import { executeTransaction, wrapRequest } from './dbConnection';
+import {
+  Chapter,
+  Novel,
+  ParsedNovel,
+} from '../types';
+import {
+  generateId,
+  STORES,
+} from './dbConfig';
+import {
+  executeTransaction,
+  wrapRequest,
+} from './dbConnection';
 
 // 保存小说和章节
 export const saveNovel = async (parsedNovel: ParsedNovel): Promise<Novel> => {

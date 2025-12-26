@@ -1,6 +1,16 @@
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { TabBar, TabBarItem } from "tdesign-mobile-react";
+import {
+  useEffect,
+  useState,
+} from 'react';
+
+import {
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
+import {
+  TabBar,
+  TabBarItem,
+} from 'tdesign-mobile-react';
 
 interface BottomBarProps {
   defaultSelected?: string;
@@ -38,4 +48,4 @@ const BottomBar = ({ defaultSelected = 'shelf', itemList }: BottomBarProps) => {
   );
 }
 
-export { BottomBar}
+export { BottomBar };

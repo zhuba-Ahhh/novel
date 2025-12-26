@@ -1,8 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+
 import { debounce } from 'lodash-es';
-import { Chapter } from '../types';
-import { ReadingSettings } from '../types';
+
 import { saveReadingProgress } from '../services/progressService';
+import {
+  Chapter,
+  ReadingSettings,
+} from '../types';
 
 export const useProgressManager = (
   novelId: string,

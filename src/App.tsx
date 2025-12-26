@@ -1,8 +1,17 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import styles from './App.module.less';
-import { BookshelfPage, ReaderPage } from './pages';
-import { ReadingProvider } from './contexts/ReadingContext';
 import { useMemo } from 'react';
+
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+} from 'react-router-dom';
+
+import styles from './App.module.less';
+import { ReadingProvider } from './contexts/ReadingContext';
+import {
+  BookshelfPage,
+  ReaderPage,
+} from './pages';
 
 const App = () => {
   const isProd = process.env.NODE_ENV === 'production';

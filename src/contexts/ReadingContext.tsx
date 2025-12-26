@@ -1,7 +1,28 @@
-import { createContext, useState, useContext, ReactNode, useMemo, useCallback, useEffect } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+
+import {
+  MAX_FONT_SIZE,
+  MAX_LINE_SPACING,
+  MIN_FONT_SIZE,
+  MIN_LINE_SPACING,
+  READING_SETTINGS_KEY,
+} from '@/const';
+import {
+  DEFAULT_SETTINGS,
+  FONT_OPTIONS,
+  FontKey,
+  THEME_CONFIGS,
+} from '@/const/theme';
+
 import { ReadingSettings } from '../types';
-import { MAX_FONT_SIZE, MAX_LINE_SPACING, MIN_FONT_SIZE, MIN_LINE_SPACING, READING_SETTINGS_KEY } from '@/const';
-import { DEFAULT_SETTINGS, THEME_CONFIGS, FONT_OPTIONS, FontKey } from '@/const/theme';
 
 // 阅读上下文类型
 interface ReadingContextType {

@@ -1,7 +1,9 @@
 import { Button } from 'tdesign-mobile-react';
-import styles from './BookshelfHeader.module.less';
-import listIcon from '@/assets/svg/list.svg';
+
 import gridIcon from '@/assets/svg/card.svg';
+import listIcon from '@/assets/svg/list.svg';
+
+import styles from './BookshelfHeader.module.less';
 
 interface BookshelfHeaderProps {
   layout: 'list' | 'grid';

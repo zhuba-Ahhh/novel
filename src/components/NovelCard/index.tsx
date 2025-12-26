@@ -1,8 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Avatar, Button, Dialog, Input, Loading } from 'tdesign-mobile-react';
-import { Novel, ReadingProgress, Chapter } from '@/types';
-import { getReadingProgress } from '@/services/progressService';
+import {
+  useEffect,
+  useState,
+} from 'react';
+
+import {
+  Avatar,
+  Button,
+  Dialog,
+  Input,
+  Loading,
+} from 'tdesign-mobile-react';
+
 import { getChapter } from '@/services/chapterService';
+import { getReadingProgress } from '@/services/progressService';
+import {
+  Chapter,
+  Novel,
+  ReadingProgress,
+} from '@/types';
+
 import styles from './index.module.less';
 
 interface NovelCardProps {

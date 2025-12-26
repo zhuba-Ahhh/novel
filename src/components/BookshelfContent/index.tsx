@@ -1,4 +1,5 @@
 import { Novel } from '@/types';
+
 import { NovelCard } from '../NovelCard';
 import styles from './index.module.less';
 

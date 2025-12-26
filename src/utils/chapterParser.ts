@@ -1,6 +1,10 @@
-import { ParsedNovel, Chapter } from '../types';
+import { zhToNumber } from 'zh-to-number';
+
+import {
+  Chapter,
+  ParsedNovel,
+} from '../types';
 import { extractMetadataFromFilename } from './metadataParser';
-import {zhToNumber} from 'zh-to-number';
 
 // 常见章节标题正则表达式模式
 const CHAPTER_PATTERNS = [

@@ -1,9 +1,14 @@
-import { useEffect, useState } from 'react';
-import { Chapter } from '../types';
-import { getAllNovels } from '../services/dbService';
-import { getNovelChapters } from '../services/chapterService';
-import { getReadingProgress } from '../services/progressService';
+import {
+  useEffect,
+  useState,
+} from 'react';
+
 import { useNavigate } from 'react-router-dom';
+
+import { getNovelChapters } from '../services/chapterService';
+import { getAllNovels } from '../services/dbService';
+import { getReadingProgress } from '../services/progressService';
+import { Chapter } from '../types';
 
 export const useNovelDataLoader = (novelId: string | undefined) => {
   const [novelTitle, setNovelTitle] = useState<string>('');

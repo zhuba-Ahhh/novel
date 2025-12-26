@@ -1,10 +1,27 @@
-import { useState, useRef, ChangeEvent } from 'react';
-import { Button, Progress, Toast } from 'tdesign-mobile-react';
-import styles from './index.module.less';
-import { UploadStatus, ParsedNovel } from '@/types';
-import { parseTxtNovel, readFileContent } from '@/utils';
+import {
+  ChangeEvent,
+  useRef,
+  useState,
+} from 'react';
+
 import { endsWith } from 'lodash-es';
+import {
+  Button,
+  Progress,
+  Toast,
+} from 'tdesign-mobile-react';
+
 import addIcon from '@/assets/svg/add.svg';
+import {
+  ParsedNovel,
+  UploadStatus,
+} from '@/types';
+import {
+  parseTxtNovel,
+  readFileContent,
+} from '@/utils';
+
+import styles from './index.module.less';
 
 interface FileUploaderProps {
   onNovelParsed: (parsedNovel: ParsedNovel) => void;

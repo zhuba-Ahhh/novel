@@ -1,5 +1,9 @@
-import { ReadingSettings } from "@/types";
-import { DEFAULT_FONT_SIZE, DEFAULT_LINE_SPACING } from "./common";
+import { ReadingSettings } from '@/types';
+
+import {
+  DEFAULT_FONT_SIZE,
+  DEFAULT_LINE_SPACING,
+} from './common';
 
 interface ThemeConfig {
   backgroundColor: string;

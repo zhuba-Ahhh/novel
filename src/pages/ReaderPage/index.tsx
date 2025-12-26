@@ -1,13 +1,32 @@
-import { useState, useRef, useMemo, useLayoutEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import styles from './index.module.less';
+import {
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+
+import {
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
+import {
+  BackTop,
+  Loading,
+} from 'tdesign-mobile-react';
+
+import {
+  ChapterContent,
+  ChapterList,
+  ChapterNavigation,
+  ReaderHeader,
+} from '@/components';
+import { ReaderSetting } from '@/components/ReaderSetting';
 import { useReadingContext } from '@/contexts/ReadingContext';
-import { BackTop, Loading } from 'tdesign-mobile-react';
-import { ChapterList, ChapterNavigation, ReaderHeader, ChapterContent } from '@/components';
+import { useChapterNavigation } from '@/hooks/useChapterNavigation';
 import { useNovelDataLoader } from '@/hooks/useNovelDataLoader';
 import { useProgressManager } from '@/hooks/useProgressManager';
-import { useChapterNavigation } from '@/hooks/useChapterNavigation';
-import { ReaderSetting } from '@/components/ReaderSetting';
+
+import styles from './index.module.less';
 
 const ReaderPage: React.FC = () => {
   const { novelId } = useParams<{ novelId: string }>();

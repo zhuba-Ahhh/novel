@@ -1,6 +1,11 @@
 import React from 'react';
+
+import {
+  Chapter,
+  ReadingSettings,
+} from '@/types';
+
 import styles from './index.module.less';
-import { Chapter, ReadingSettings } from '@/types';
 
 interface ChapterContentProps {
   currentChapter: Chapter;

@@ -1,8 +1,21 @@
-import { Popup, Popover } from "tdesign-mobile-react";
+import {
+  Popover,
+  Popup,
+} from 'tdesign-mobile-react';
+
+import {
+  MAX_FONT_SIZE,
+  MAX_LINE_SPACING,
+  MIN_FONT_SIZE,
+  MIN_LINE_SPACING,
+} from '@/const';
+import {
+  FONT_OPTIONS,
+  THEME_CONFIGS,
+} from '@/const/theme';
+import { useReadingContext } from '@/contexts/ReadingContext';
+
 import styles from './index.module.less';
-import { useReadingContext } from "@/contexts/ReadingContext";
-import { MAX_FONT_SIZE, MAX_LINE_SPACING, MIN_FONT_SIZE, MIN_LINE_SPACING } from "@/const";
-import { THEME_CONFIGS, FONT_OPTIONS } from "@/const/theme";
 
 interface SettingButtonProps {
   isScrolling: boolean;
@@ -148,4 +161,4 @@ const ReaderSetting = ({ isScrolling, showSettingsPanel, setShowSettingsPanel }:
   )
 }
 
-export { ReaderSetting }
+export { ReaderSetting };

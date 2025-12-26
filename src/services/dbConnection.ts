@@ -1,4 +1,8 @@
-import { DB_NAME, DB_VERSION, STORES } from './dbConfig';
+import {
+  DB_NAME,
+  DB_VERSION,
+  STORES,
+} from './dbConfig';
 
 // 打开数据库连接
 export const openDB = (): Promise<IDBDatabase> => {
