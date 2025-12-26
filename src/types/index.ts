@@ -28,6 +28,13 @@ export interface ReadingProgress {
   lastReadAt: Date;
 }
 
+export const ReadingModeEnum = {
+  Scroll: 'scroll',
+  Page: 'page',
+} as const;
+
+export type ReadingMode = (typeof ReadingModeEnum)[keyof typeof ReadingModeEnum];
+
 // 阅读设置类型
 export interface ReadingSettings {
   fontSize: number;
@@ -36,7 +43,7 @@ export interface ReadingSettings {
   backgroundColor: string;
   textColor: string;
   theme: string;
-  readingMode: 'scroll' | 'page';
+  readingMode: ReadingMode;
 }
 
 // 解析后的小说数据

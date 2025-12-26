@@ -1,4 +1,7 @@
-import { ReadingSettings } from '@/types';
+import {
+  ReadingModeEnum,
+  ReadingSettings,
+} from '@/types';
 
 import {
   DEFAULT_FONT_SIZE,
@@ -188,7 +191,7 @@ const DEFAULT_SETTINGS: ReadingSettings = {
   backgroundColor: THEME_CONFIGS[0].backgroundColor,
   textColor: THEME_CONFIGS[0].textColor,
   theme: 'light',
-  readingMode: 'scroll',
+  readingMode: ReadingModeEnum.Scroll,
 };
 
 export { DEFAULT_SETTINGS, THEME_CONFIGS, THEME_LIST };

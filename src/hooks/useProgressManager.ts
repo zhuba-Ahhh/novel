@@ -23,12 +23,10 @@ export const useProgressManager = (
   const [isScrolling, setIsScrolling] = useState(false);
 
   // 防抖处理滚动结束
-  const handleScrollEnd = useCallback(
+  const handleScrollEnd =
     debounce(() => {
       setIsScrolling(false);
-    }, 300),
-    []
-  )
+    }, 300)
 
   // 保存阅读进度
   const saveProgress = useCallback(() => {
@@ -45,22 +43,20 @@ export const useProgressManager = (
 
   // 滚动事件处理
   const handleScroll = useCallback(() => {
-    if (settings.readingMode === 'scroll') {
-      // 设置为正在滚动状态
-      setIsScrolling(true);
+    // 设置为正在滚动状态
+    setIsScrolling(true);
 
-      // 保存进度
-      saveProgress();
+    // 保存进度
+    saveProgress();
 
-      // 更新滚动状态
-      if (contentRef?.current) {
-        setHasScrolled(contentRef.current.scrollTop > 0);
-      }
-
-      // 触发防抖处理滚动结束
-      handleScrollEnd();
+    // 更新滚动状态
+    if (contentRef?.current) {
+      setHasScrolled(contentRef.current.scrollTop > 0);
     }
-  }, [saveProgress, settings.readingMode, contentRef, setHasScrolled, handleScrollEnd]);
+
+    // 触发防抖处理滚动结束
+    handleScrollEnd();
+  }, [saveProgress, contentRef, setHasScrolled, handleScrollEnd]);
 
   // 组件卸载时清理防抖
   useEffect(() => {
