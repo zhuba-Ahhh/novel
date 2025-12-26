@@ -23,20 +23,50 @@ interface SettingButtonProps {
   setShowSettingsPanel: (show: boolean) => void;
 }
 
+interface SettingControlProps {
+  label: string;
+  value: number;
+  minValue: number;
+  maxValue: number;
+  onDecrease: () => void;
+  onIncrease: () => void;
+}
+
+const SettingControl = ({ label, value, minValue, maxValue, onDecrease, onIncrease }: SettingControlProps) => {
+  return (
+    <div className={styles['setting-item']}>
+      <h4>{label}</h4>
+      <div className={styles['setting-controls']}>
+        <button
+          className={styles['control-button']}
+          onClick={onDecrease}
+          disabled={value === minValue}
+        >
+          A-
+        </button>
+        <span className={styles['control-display']}>{value}px</span>
+        <button
+          className={styles['control-button']}
+          onClick={onIncrease}
+          disabled={value === maxValue}
+        >
+          A+
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const ReaderSetting = ({ isScrolling, showSettingsPanel, setShowSettingsPanel }: SettingButtonProps) => {
   const { settings, increaseFontSize, decreaseFontSize, toggleTheme, toggleFont, increaseLineSpacing, decreaseLineSpacing } = useReadingContext();
 
   return (
     <>
-      {
-        !isScrolling &&
-        <div
-          className={styles['settings-button']}
-          onClick={() => setShowSettingsPanel(!showSettingsPanel)}
-        >
+      {!isScrolling && (
+        <div className={styles['settings-button']} onClick={() => setShowSettingsPanel(!showSettingsPanel)}>
           设置
         </div>
-      }
+      )}
       <Popup
         visible={showSettingsPanel}
         placement="bottom"
@@ -44,88 +74,54 @@ const ReaderSetting = ({ isScrolling, showSettingsPanel, setShowSettingsPanel }:
         preventScrollThrough={false}
       >
         <div className={styles['settings-container']}>
-          <div className={styles['settings-container__header']}>
+          <div className={styles['settings-header']}>
             <h3>阅读设置</h3>
-            <button
-              className={styles['settings-container__header__close-button']}
-              onClick={() => setShowSettingsPanel(false)}
-            >
+            <button className={styles['close-button']} onClick={() => setShowSettingsPanel(false)}>
               ×
             </button>
           </div>
 
-          <div className={styles['settings-container__content']}>
+          <div className={styles['settings-content']}>
+            {/* 字体大小和行高设置 */}
             <div className={styles['setting-section']}>
-              {/* 字体大小设置 */}
-              <div className={styles['setting-section__item']}>
-                <div>
-                  <h4>字体大小</h4>
-                  <div className={styles['setting-section__font-size-controls']}>
-                    <button
-                      className={styles['control-button']}
-                      onClick={decreaseFontSize}
-                      disabled={settings.fontSize === MIN_FONT_SIZE}
-                    >
-                      A-
-                    </button>
-                    <span className={styles['setting-section__font-size-controls__font-size-display']}>{settings.fontSize}px</span>
-                    <button
-                      className={styles['control-button']}
-                      onClick={increaseFontSize}
-                      disabled={settings.fontSize === MAX_FONT_SIZE}
-                    >
-                      A+
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <h4>行高</h4>
-                  <div className={styles['setting-section__line-spacing-controls']}>
-                    <button
-                      className={styles['control-button']}
-                      onClick={decreaseLineSpacing}
-                      disabled={settings.lineSpacing === MIN_LINE_SPACING}
-                    >
-                      A-
-                    </button>
-                    <span>{settings.lineSpacing}px</span>
-                    <button
-                      className={styles['control-button']}
-                      onClick={increaseLineSpacing}
-                      disabled={settings.lineSpacing === MAX_LINE_SPACING}
-                    >
-                      A+
-                    </button>
-                  </div>
-                </div>
+              <div className={styles['setting-row']}>
+                <SettingControl
+                  label="字体大小"
+                  value={settings.fontSize}
+                  minValue={MIN_FONT_SIZE}
+                  maxValue={MAX_FONT_SIZE}
+                  onDecrease={decreaseFontSize}
+                  onIncrease={increaseFontSize}
+                />
+                <SettingControl
+                  label="行高"
+                  value={settings.lineSpacing}
+                  minValue={MIN_LINE_SPACING}
+                  maxValue={MAX_LINE_SPACING}
+                  onDecrease={decreaseLineSpacing}
+                  onIncrease={increaseLineSpacing}
+                />
               </div>
             </div>
 
             {/* 主题设置 */}
             <div className={styles['setting-section']}>
               <h4>主题</h4>
-              <div className={styles['setting-section__theme-controls']}>
+              <div className={styles['setting-options']}>
                 {THEME_CONFIGS.map((theme) => (
-                  <Popover
-                    theme="dark"
-                    content={theme.description}
-                    triggerElement={
-                      <button
-                        key={theme.key}
-                        className={`${styles['setting-section__theme-controls__theme-button']} ${settings.theme === theme.key ? styles['active'] : ''}`}
-                        onClick={() => toggleTheme(theme.key)}
-                        style={{
-                          backgroundColor: theme.backgroundColor,
-                          color: theme.textColor,
-                          border: `1px solid ${theme.textColor}`,
-                        }}
-                      >
-                        {theme.name}
-                      </button>
-                    }
-                  ></Popover>
-
+                  <Popover key={theme.key} theme="dark" content={theme.description} triggerElement={
+                    <button
+                      className={`${styles['option-button']} ${settings.theme === theme.key ? styles['active'] : ''}`}
+                      onClick={() => toggleTheme(theme.key)}
+                      style={{
+                        backgroundColor: theme.backgroundColor,
+                        color: theme.textColor,
+                        border: `1px solid ${theme.textColor}`,
+                      }}
+                    >
+                      {theme.name}
+                    </button>
+                  }></Popover>
                 ))}
               </div>
             </div>
@@ -133,24 +129,17 @@ const ReaderSetting = ({ isScrolling, showSettingsPanel, setShowSettingsPanel }:
             {/* 字体设置 */}
             <div className={styles['setting-section']}>
               <h4>字体</h4>
-              <div className={styles['setting-section__font-controls']}>
+              <div className={styles['setting-options']}>
                 {FONT_OPTIONS.map((font) => (
-                  <Popover
-                    theme="dark"
-                    content={font.description}
-                    triggerElement={
-                      <button
-                        key={font.key}
-                        className={`${styles['setting-section__font-controls__font-button']} ${settings.fontFamily === font.fontFamily ? styles['active'] : ''}`}
-                        onClick={() => toggleFont(font.key)}
-                        style={{
-                          fontFamily: font.fontFamily,
-                        }}
-                      >
-                        {font.label}
-                      </button>
-                    }
-                  ></Popover>
+                  <Popover key={font.key} theme="dark" content={font.description} triggerElement={
+                    <button
+                      className={`${styles['option-button']} ${settings.fontFamily === font.fontFamily ? styles['active'] : ''}`}
+                      onClick={() => toggleFont(font.key)}
+                      style={{ fontFamily: font.fontFamily }}
+                    >
+                      {font.label}
+                    </button>
+                  }></Popover>
                 ))}
               </div>
             </div>
